@@ -49,6 +49,8 @@ function draw() {
         line(node.pos.x, node.pos.y, mouseX, mouseY);
     }
 
+    drawConnections();
+
 }
 
 function keyPressed() {
@@ -95,11 +97,13 @@ function mousePressed() {
             if (!startNodeExist()) {
                 setCustomElement('start', wrapper, 'selector', () => {
                     node.setStart(!node.start);
+                    load_automata();
                 });
             }
 
             setCustomElement('finish', wrapper, 'selector', () => {
                 node.setFinish(!node.finish);
+                load_automata();
             });
 
             document.addEventListener('contextmenu', event => event.preventDefault());

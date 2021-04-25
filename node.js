@@ -34,51 +34,6 @@ class Node {
 
     show() {
 
-        for (let connection of this.connections) {
-            fill(0);
-
-            let x1 = connection.parent.pos.x;
-            let y1 = connection.parent.pos.y;
-            let r1 = connection.parent.p / 2;
-
-            let x2 = connection.next_state.pos.x;
-            let y2 = connection.next_state.pos.y;
-            let r2 = connection.next_state.p / 2;
-
-            let ΔY = y2 - y1
-            let ΔX = x2 - x1
-            let L = sqrt((ΔX * ΔX + ΔY * ΔY));
-            let r1L = r1 / L;
-            let r2L = r2 / L;
-            let y12 = y1 + ΔY * r1L;
-            let y22 = y2 - ΔY * r2L;
-            let x12 = x1 + ΔX * r1L;
-            let x22 = x2 - ΔX * r2L;
-
-
-
-
-            let tx = (x12 + x22) / 2 + 8;
-            let ty = (y12 + y22) / 2 - 8;
-            // console.log(connection);
-            if (connection.next_state.top) {
-                ty = (y12 + y22) / 2 + 20;
-            }
-
-
-            fill(255);
-            text(connection.rule, tx + 10, ty);
-            noFill();
-            strokeWeight(3);
-            beginShape();
-            vertex(x12, y12);
-
-            // TODO: line separation
-
-            vertex(x22, y22);
-            endShape();
-        }
-
         fill(133, 151, 49);
         strokeWeight(2);
         ellipse(this.pos.x, this.pos.y, this.p, this.p);
@@ -134,7 +89,7 @@ class Node {
         let xSize = 50;
 
         input.size(xSize, xSize * 2 / 5);
-        input.position(mouseX - xSize / 2, mouseY - xSize / 4);
+        input.position((next_state.pos.x + this.pos.x)/2  , 0.5 * (next_state.pos.y + this.pos.y) );
 
 
         document.getElementById("input").addEventListener("keydown", (event) => {
@@ -143,6 +98,7 @@ class Node {
                 this.connections.push(connection);
                 this.hasNextState(connection);
                 input.remove();
+                load_automata();
                 setEdit();
             }
         }, false);
