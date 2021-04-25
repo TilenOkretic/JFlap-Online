@@ -42,3 +42,6 @@ function process_string(str) {
 
     return next ? next.finish : false;
 }
+
+
+document.getElementById('LA').addEventListener('click', load_automata, true);

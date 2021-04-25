@@ -66,8 +66,10 @@ class Node {
             }
 
 
+            fill(255);
             text(connection.rule, tx + 10, ty);
-            noFill()
+            noFill();
+            strokeWeight(3);
             beginShape();
             vertex(x12, y12);
 
@@ -78,6 +80,7 @@ class Node {
         }
 
         fill(133, 151, 49);
+        strokeWeight(2);
         ellipse(this.pos.x, this.pos.y, this.p, this.p);
 
 
@@ -99,7 +102,7 @@ class Node {
 
     }
 
-    process_char(chars, i, test) {
+    process_char(chars, i) {
         
 
         if(chars.length == i || this.connections.length == 0){
@@ -117,7 +120,7 @@ class Node {
 
     }
 
-    addConnection(next_state, rule) {
+    addConnection(next_state) {
 
         /* TODO: Rule parsing/cheking, maybe */
         let connection = {
@@ -127,19 +130,20 @@ class Node {
         };
 
         input = createInput('');
-        input.elt.id = 'test';
+        input.elt.id = 'input';
         let xSize = 50;
 
         input.size(xSize, xSize * 2 / 5);
         input.position(mouseX - xSize / 2, mouseY - xSize / 4);
 
 
-        document.getElementById("test").addEventListener("keydown", (event) => {
+        document.getElementById("input").addEventListener("keydown", (event) => {
             if (event.key === 'Enter') {
                 connection.rule = input.value();
                 this.connections.push(connection);
                 this.hasNextState(connection);
                 input.remove();
+                setEdit();
             }
         }, false);
 

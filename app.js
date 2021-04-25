@@ -1,13 +1,19 @@
 /*##-MODES as const values-##*/
 const MODE_ADD_NODES = 'mode_add_nodes';
 const MODE_LINK_NODES = 'mode_link_nodes';
+const MODE_EDIT_NODES = 'mode_edit_nodes';
+
+const EDIT_TYPE_NODE_NAME = 'node_name';
+const EDIT_TYPE_NODE_MOVE = 'node_move';
+const EDIT_TYPE_LINK_NAME = 'link_name';
+
 /*###########################*/
 
-let EDITING = false;
+let edit = '';
 let NODES = [];
 
 let curMode = '';
-let node = undefined;
+let node;
 let input;
 
 document.querySelectorAll('.sidebar-element').forEach(e => {
@@ -17,6 +23,7 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
         new Card();
 
         node = null;
+
     });
 });
 
@@ -46,25 +53,41 @@ function draw() {
 
 function keyPressed() {
     if (key === 'Enter') {
-        if (input && node) {
-            node.name = input.value();
-            input.remove();
-            setEditing(false);
-        }
+
     } else if (key === 'k') {
         load_automata();
     }
 }
 
 function mousePressed() {
-    node = getNodeFromPos({
-        x: mouseX,
-        y: mouseY
-    });
-    if (isCurrentMode(MODE_ADD_NODES)) {
-        if (!isEditing() && node && mouseButton === 'right') {
-            setEditing();
 
+    if (isCurrentMode(MODE_ADD_NODES) || isCurrentMode(MODE_LINK_NODES) && mouseButton != 'right' && !isEditType(EDIT_TYPE_LINK_NAME)) {
+        node = getNodeFromPos({
+            x: mouseX,
+            y: mouseY
+        });
+    }
+
+    if (isCurrentMode(MODE_ADD_NODES)) {
+
+        if (!node && mouseButton === 'left' && mouseX > 50 && mouseY > 50 && mouseX < width - 50 && mouseY < height - 50) {
+            addNode(new Node(`q${NODES.length}`));
+        }
+    } else if (isCurrentMode(MODE_EDIT_NODES)) {
+
+        if (document.querySelector('.wrapper') != null && node && mouseButton === 'left') {
+            document.querySelector('.wrapper').remove();
+            return false;
+        }
+
+        if (mouseButton === 'right') {
+
+            node = getNodeFromPos({
+                x: mouseX,
+                y: mouseY
+            });
+
+            // TODO: make a wrapper class
             let wrapper = createDiv();
             wrapper.position(mouseX, mouseY);
             wrapper.addClass('wrapper');
@@ -82,30 +105,31 @@ function mousePressed() {
             document.addEventListener('contextmenu', event => event.preventDefault());
             return false;
         }
-        if (document.querySelector('.wrapper') != null && isEditing() && node && mouseButton === 'left') {
-            document.querySelector('.wrapper').remove();
-            setEditing();
-            return false;
-        }
 
         if (document.querySelector('.wrapper') && mouseButton === 'left') {
             document.querySelector('.wrapper').remove();
-        } else if (!node && !isEditing() && mouseButton === 'left' && mouseX > 50 && mouseY > 50 && mouseX < width - 50 && mouseY < height - 50) {
-            NODES.push(new Node(`q${NODES.length}`));
         }
     }
 }
 
 function mouseReleased() {
 
-    let newNode = getNodeFromPos({
-        x: mouseX,
-        y: mouseY
-    });
 
-    if (isCurrentMode(MODE_LINK_NODES)) {
+    if (isCurrentMode(MODE_LINK_NODES) && !isEditType(EDIT_TYPE_LINK_NAME)) {
+
+        if(mouseButton === 'right'){
+            return;
+        }
+
+        let newNode = getNodeFromPos({
+            x: mouseX,
+            y: mouseY
+        });
+
         if (node && newNode) {
-            // Create connection betwen nodes
+            setCurrentMode(MODE_LINK_NODES);
+            setEdit(EDIT_TYPE_LINK_NAME);
+            console.log(getEdit());
             node.addConnection(newNode);
 
             // remove currently selected node
@@ -116,13 +140,14 @@ function mouseReleased() {
 
 function mouseDragged() {
 
-    if (isCurrentMode(MODE_ADD_NODES)) {
-        if (isEditing()) {
-            return false;
-        }
+    if (isCurrentMode(MODE_EDIT_NODES)) {
+        setEdit(EDIT_TYPE_NODE_MOVE);
+        node = getNodeFromPos({
+            x: mouseX,
+            y: mouseY
+        });
 
-        if (node) {
-            //moving nodes when mouse is dragged
+        if (node && isEditType(EDIT_TYPE_NODE_MOVE)) {
             node.setPos(mouseX, mouseY);
         }
     }
@@ -130,22 +155,30 @@ function mouseDragged() {
 
 function doubleClicked() {
 
-    if (isCurrentMode(MODE_ADD_NODES)) {
-        if (isEditing()) {
-            return;
-        }
+    if (isCurrentMode(MODE_EDIT_NODES)) {
 
         node = getNodeFromPos({
             x: mouseX,
             y: mouseY
         });
+
         if (node) {
-            setEditing(true);
+            setEdit(EDIT_TYPE_NODE_NAME);
+
             input = createInput(node.name);
+            input.elt.id = 'input';
             let xSize = 50;
             input.size(xSize, xSize * 2 / 5);
             input.position(mouseX - xSize / 2, mouseY - xSize / 4);
 
+            document.getElementById("input").addEventListener("keydown", (event) => {
+                if (event.key === 'Enter') {
+
+                    node.name = input.value();
+                    input.remove();
+                    setEdit();
+                }
+            });
         }
     }
 }
@@ -156,10 +189,6 @@ function doubleClicked() {
 
 function getNodeFromPos(pos) {
 
-
-    if (isEditing()) {
-        return node;
-    }
     for (let i = 0; i < NODES.length; i++) {
         let dis = sqrt((pos.x - NODES[i].pos.x) * (pos.x - NODES[i].pos.x) + (pos.y - NODES[i].pos.y) * (pos.y - NODES[i].pos.y));
         if (dis < NODES[i].p) {
@@ -191,12 +220,20 @@ function startNodeExist() {
 }
 
 function isEditing() {
-    return EDITING;
+    return isCurrentMode(MODE_EDIT_NODES) || isCurrentMode(MODE_LINK_NODES);
 }
 
-function setEditing(val = !isEditing()) {
-    EDITING = val;
-    return EDITING;
+function setEdit(type = '') {
+    edit = type;
+    return edit;
+}
+
+function getEdit() {
+    return isEditing() ? edit : 'not editing';
+}
+
+function isEditType(type) {
+    return getEdit() === type;
 }
 
 
@@ -211,10 +248,10 @@ function setCurrentMode(mode) {
 
 function getParsedMode() {
     let tmp = curMode.split('_');
-    tmp = tmp.slice(1,tmp.length);
+    tmp = tmp.slice(1, tmp.length);
     let out = "";
-    tmp.forEach((c)=>{
-        out += c+" ";
+    tmp.forEach((c) => {
+        out += c + " ";
     });
     return out;
 }
@@ -234,4 +271,10 @@ function getNode() {
 
 function hasNode() {
     return node ? true : false;
+}
+
+function addNode(node) {
+    NODES.push(node);
+    setNode(node);
+    return node;
 }
