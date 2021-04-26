@@ -97,22 +97,7 @@ function mousePressed() {
             });
 
             // TODO: make a wrapper class
-            let wrapper = createDiv();
-            wrapper.position(mouseX, mouseY);
-            wrapper.addClass('wrapper');
-
-            if (!startNodeExist()) {
-                setCustomElement('start', wrapper, 'selector', () => {
-                    node.setStart(!node.start);
-                    automata.load_automata();
-                });
-            }
-
-            setCustomElement('finish', wrapper, 'selector', () => {
-                node.setFinish(!node.finish);
-                automata.load_automata();
-            });
-
+            createWrapper(node, automata);
             document.addEventListener('contextmenu', event => event.preventDefault());
             return false;
         }
@@ -228,6 +213,21 @@ function startNodeExist() {
         }
     }
     return false;
+}
+
+function getStartNode() {
+
+    if(!startNodeExist()){
+        return;
+    }
+
+    for (let i = 0; i < getAutomataNodes().length; i++) {
+        const node = getAutomataNodes()[i];
+        if (node.start) {
+            return node;
+        }
+    }
+    return null;
 }
 
 function isEditing() {
