@@ -27,7 +27,7 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
     });
 });
 
-document.getElementById('LA').addEventListener('click', ()=>{
+document.getElementById('LA').addEventListener('click', () => {
     automata = new DFA();
 
     createCard('Automata Workspace Reset', 'orange');
@@ -46,14 +46,14 @@ function setup() {
 function draw() {
 
     background(51);
-    
-    
+
+
     if (isCurrentMode(MODE_LINK_NODES) && node) {
         fill(0);
         line(node.pos.x, node.pos.y, mouseX, mouseY);
     }
-    
-    
+
+
     automata.drawConnections();
     for (let node of getAutomataNodes()) {
         node.show();
@@ -113,7 +113,7 @@ function mouseReleased() {
 
     if (isCurrentMode(MODE_LINK_NODES) && !isEditType(EDIT_TYPE_LINK_NAME)) {
 
-        if(mouseButton === 'right'){
+        if (mouseButton === 'right') {
             return;
         }
 
@@ -124,8 +124,7 @@ function mouseReleased() {
 
         if (node && newNode) {
             setCurrentMode(MODE_LINK_NODES);
-            setEdit(EDIT_TYPE_LINK_NAME);
-            console.log(getEdit());
+            setEditType(EDIT_TYPE_LINK_NAME);
             node.addConnection(newNode);
 
             // remove currently selected node
@@ -136,8 +135,9 @@ function mouseReleased() {
 
 function mouseDragged() {
 
-    if (isCurrentMode(MODE_EDIT_NODES)) {
-        setEdit(EDIT_TYPE_NODE_MOVE);
+    if (isCurrentMode(MODE_EDIT_NODES) && !input) {
+        setEditType(EDIT_TYPE_NODE_MOVE);
+        
         node = getNodeFromPos({
             x: mouseX,
             y: mouseY
@@ -151,15 +151,18 @@ function mouseDragged() {
 
 function doubleClicked() {
 
-    if (isCurrentMode(MODE_EDIT_NODES)) {
+    if (isCurrentMode(MODE_EDIT_NODES) && !input) {
 
-        node = getNodeFromPos({
-            x: mouseX,
-            y: mouseY
-        });
+        if(!node){
+            console.log('new node');
+            node = getNodeFromPos({
+                x: mouseX,
+                y: mouseY
+            });
+        }
 
         if (node) {
-            setEdit(EDIT_TYPE_NODE_NAME);
+            setEditType(EDIT_TYPE_NODE_NAME);
 
             input = createInput(node.name);
             input.elt.id = 'input';
@@ -169,10 +172,11 @@ function doubleClicked() {
 
             document.getElementById("input").addEventListener("keydown", (event) => {
                 if (event.key === 'Enter') {
-
                     node.name = input.value();
                     input.remove();
-                    setEdit();
+                    automata.load_automata();
+                    input = null;
+                    setEditType();
                 }
             });
         }
@@ -182,114 +186,3 @@ function doubleClicked() {
 
 
 /* Utils TODO: create a separate file for utils */
-
-function getNodeFromPos(pos) {
-
-    for (let i = 0; i < getAutomataNodes().length; i++) {
-        let dis = sqrt((pos.x - getAutomataNodes()[i].pos.x) * (pos.x - getAutomataNodes()[i].pos.x) + (pos.y - getAutomataNodes()[i].pos.y) * (pos.y - getAutomataNodes()[i].pos.y));
-        if (dis < getAutomataNodes()[i].p) {
-            return getAutomataNodes()[i];
-        }
-    }
-}
-
-function setCustomElement(text, parent, elmClass = '', onSelected) {
-    let elm = createDiv(`${text}`);
-    elm.addClass(elmClass);
-    elm.parent(parent);
-    if (onSelected) {
-        elm.mousePressed(() => {
-            isEditing(false);
-            onSelected();
-        })
-    }
-}
-
-function startNodeExist() {
-    for (let i = 0; i < getAutomataNodes().length; i++) {
-        const node = getAutomataNodes()[i];
-        if (node.start) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function getStartNode() {
-
-    if(!startNodeExist()){
-        return;
-    }
-
-    for (let i = 0; i < getAutomataNodes().length; i++) {
-        const node = getAutomataNodes()[i];
-        if (node.start) {
-            return node;
-        }
-    }
-    return null;
-}
-
-function isEditing() {
-    return isCurrentMode(MODE_EDIT_NODES) || isCurrentMode(MODE_LINK_NODES);
-}
-
-function setEdit(type = '') {
-    edit = type;
-    return edit;
-}
-
-function getEdit() {
-    return isEditing() ? edit : 'not editing';
-}
-
-function isEditType(type) {
-    return getEdit() === type;
-}
-
-
-function getCurrentMode() {
-    return curMode;
-}
-
-function setCurrentMode(mode) {
-    curMode = mode;
-    return this.curMode;
-}
-
-function getParsedMode() {
-    let tmp = curMode.split('_');
-    tmp = tmp.slice(1, tmp.length);
-    let out = "";
-    tmp.forEach((c) => {
-        out += c + " ";
-    });
-    return out;
-}
-
-function isCurrentMode(mode) {
-    return getCurrentMode() === mode;
-}
-
-function setNode(new_node) {
-    node = new_node;
-    return node;
-}
-
-function getNode() {
-    return node;
-}
-
-function hasNode() {
-    return node ? true : false;
-}
-
-function addNode(node) {
-    getAutomataNodes().push(node);
-    setNode(node);
-    return node;
-}
-
-function getAutomataNodes() {
-    return automata.NODES;
-}

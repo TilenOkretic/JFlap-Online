@@ -96,8 +96,9 @@ class Node {
                 this.connections.push(connection);
                 this.hasNextState(connection);
                 input.remove();
+                input = null;
                 automata.load_automata();
-                setEdit();
+                setEditType();
             }
         }, false);
 
