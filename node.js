@@ -82,6 +82,7 @@ class Node {
         };
 
         input = createInput('');
+        input.elt.focus();
         input.elt.id = 'input';
         let xSize = 50;
 
