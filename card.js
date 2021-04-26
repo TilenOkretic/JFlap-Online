@@ -1,27 +1,21 @@
 /* Refactor to be more dynamic */
-class Card {
 
-    constructor() {
 
-        let card = document.createElement('div');
-        card.className = 'card';
-        card.style.transform = 'translate(-300px, 0)';
-        document.querySelector('.app').appendChild(card);
+let createCard = (text='placeholder text', color='limegreen', x=100, y=0) => {
 
-        setTimeout(() => {
-            card.style.transform = 'translate(100px, 0)';
-            card.style.background = 'limegreen';
-            card.innerHTML = getParsedMode();;
-        }, 100);
+    let card = document.createElement('div');
+    card.className = 'card';
+    card.style.transform = 'translate(-300px, 0)';
+    document.querySelector('.app').appendChild(card);
 
-        setTimeout(() => {
-            card.style.transform = 'translate(-300px,0)';
-        }, 2000);
+    setTimeout(() => {
+        card.style.transform = `translate(${x}px, ${y}px)`;
+        card.style.background = color;
+        card.innerHTML = text;
+    }, 100);
 
-        this.card = card;
-    }
+    setTimeout(() => {
+        card.style.transform = 'translate(-300px,0)';
+    }, 2000);
 
-    getCard() {
-        return this.card;
-    }
 }

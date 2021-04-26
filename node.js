@@ -109,7 +109,6 @@ class Node {
     hasNextState(state) {
         state.next_state.connections.forEach(conn => {
             if (conn.next_state.name == state.parent.name) {
-                state.next_state.top = true;
                 return true;
             }
         });

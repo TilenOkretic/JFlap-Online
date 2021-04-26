@@ -21,7 +21,7 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
     e.addEventListener('click', () => {
         setCurrentMode(e.title);
 
-        new Card();
+        createCard(getParsedMode(), 'limegreen');
 
         node = null;
     });
@@ -29,6 +29,8 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
 
 document.getElementById('LA').addEventListener('click', ()=>{
     automata = new DFA();
+
+    createCard('Automata Workspace Reset', 'orange');
 }, true);
 
 
@@ -50,7 +52,6 @@ function draw() {
         fill(0);
         line(node.pos.x, node.pos.y, mouseX, mouseY);
     }
-    
     
     
     automata.drawConnections();
