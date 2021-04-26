@@ -18,7 +18,15 @@ let createCard = (text = 'placeholder text', color = 'limegreen', x = 100, y = 0
 };
 
 let createWrapper = (node, automata) => {
-    let wrapper = createDiv();
+
+    let wrapper = document.querySelector('.wrapper');
+
+    if(wrapper){
+        wrapper.remove();
+    }
+
+    setEditType(EDIT_TYPE_NODE_FUNCTION);
+    wrapper = createDiv();
     wrapper.position(mouseX, mouseY);
     wrapper.addClass('wrapper');
 

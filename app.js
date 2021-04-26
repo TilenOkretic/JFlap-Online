@@ -5,6 +5,7 @@ const MODE_EDIT_NODES = 'mode_edit_nodes';
 
 const EDIT_TYPE_NODE_NAME = 'node_name';
 const EDIT_TYPE_NODE_MOVE = 'node_move';
+const EDIT_TYPE_NODE_FUNCTION = 'node_function';
 const EDIT_TYPE_LINK_NAME = 'link_name';
 
 /*###########################*/
@@ -182,7 +183,3 @@ function doubleClicked() {
         }
     }
 }
-
-
-
-/* Utils TODO: create a separate file for utils */
