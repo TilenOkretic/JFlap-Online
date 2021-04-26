@@ -27,8 +27,6 @@ class DFA {
         });
     }
 
-
-
     process_string(str) {
         let next = this.transitions[this.start.name][str[0]];
         for (let c = 1; c < str.length; c++) {
@@ -135,7 +133,6 @@ class DFA {
         push();
 
         let off = 12;
-        // console.log(v.heading);
         if(node_vec.x  < other_vec.x + 5 && node_vec.x > other_vec.x - 5 ){
             if(node_vec.y > other_vec.y) {
                 translate(node_vec.x - off*2, node_vec.y - v.mag() / 2);
@@ -148,7 +145,7 @@ class DFA {
                 fill(255);
                 text(rule, 0, 0);
             }
-        }else if (v.heading() > 1.6) {
+        }else if (v.heading() > 1.599) {
             if (node_vec.x > other_vec.x) {
                 translate(node_vec.x, node_vec.y);
                 rotate(v.heading() + PI);
@@ -160,7 +157,7 @@ class DFA {
                 fill(255);
                 text(rule, -v.mag() / 2, -off);
             }
-        } else if (v.heading() < -1.6) {
+        } else if (v.heading() < -1.599) {
             if (node_vec.x > other_vec.x) {
                 translate(node_vec.x, node_vec.y);
                 rotate(v.heading() + PI);
