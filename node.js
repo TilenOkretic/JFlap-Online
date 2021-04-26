@@ -11,11 +11,11 @@ class Node {
         this.start = false;
         this.finish = false;
 
-        this.connections  = [];
+        this.connections = [];
     }
 
     setPos(x, y) {
-        this.pos = createVector(x,y);
+        this.pos = createVector(x, y);
         return this.pos;
     }
 
@@ -55,21 +55,18 @@ class Node {
     }
 
     process_char(chars, i) {
-        
 
-        if(chars.length == i || this.connections.length == 0){
+        if (chars.length == i || this.connections.length == 0) {
             return this.finish;
         }
 
         for (let i = 0; i < this.connections.length; i++) {
             const conn = this.connections[i];
-            if(conn.rule == chars[i]){
+            if (conn.rule == chars[i]) {
                 console.log(conn.next_state);
                 return conn.next_state.process_char(chars, ++i, conn.next_state);
             }
-            
         }
-
     }
 
     addConnection(next_state) {
@@ -81,16 +78,7 @@ class Node {
             rule: '-'
         };
 
-        input = createInput('');
-        input.elt.focus();
-        input.elt.id = 'input';
-        let xSize = 50;
-
-        input.size(xSize, xSize * 2 / 5);
-        input.position((next_state.pos.x + this.pos.x)/2  , 0.5 * (next_state.pos.y + this.pos.y) );
-
-
-        document.getElementById("input").addEventListener("keydown", (event) => {
+        createInputBox('', 50, (event) => {
             if (event.key === 'Enter') {
                 connection.rule = input.value();
                 this.connections.push(connection);
@@ -100,8 +88,7 @@ class Node {
                 automata.load_automata();
                 setEditType();
             }
-        }, false);
-
+        }).position((next_state.pos.x + this.pos.x) / 2, 0.5 * (next_state.pos.y + this.pos.y));
 
 
 
@@ -116,5 +103,4 @@ class Node {
         });
         return false;
     }
-
 }

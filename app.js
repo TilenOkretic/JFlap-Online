@@ -12,9 +12,8 @@ const EDIT_TYPE_LINK_NAME = 'link_name';
 
 let edit = '';
 let curMode = '';
-
-let node;
 let input;
+let node;
 
 let automata;
 
@@ -138,7 +137,7 @@ function mouseDragged() {
 
     if (isCurrentMode(MODE_EDIT_NODES) && !input) {
         setEditType(EDIT_TYPE_NODE_MOVE);
-        
+
         node = getNodeFromPos({
             x: mouseX,
             y: mouseY
@@ -154,24 +153,15 @@ function doubleClicked() {
 
     if (isCurrentMode(MODE_EDIT_NODES) && !input) {
 
-        if(!node){
-            console.log('new node');
-            node = getNodeFromPos({
-                x: mouseX,
-                y: mouseY
-            });
-        }
+        node = getNodeFromPos({
+            x: mouseX,
+            y: mouseY
+        });
 
         if (node) {
             setEditType(EDIT_TYPE_NODE_NAME);
 
-            input = createInput(node.name);
-            input.elt.id = 'input';
-            let xSize = 50;
-            input.size(xSize, xSize * 2 / 5);
-            input.position(mouseX - xSize / 2, mouseY - xSize / 4);
-
-            document.getElementById("input").addEventListener("keydown", (event) => {
+            createInputBox(node.name, 50, (event) => {
                 if (event.key === 'Enter') {
                     node.name = input.value();
                     input.remove();
