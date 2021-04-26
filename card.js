@@ -20,7 +20,7 @@ class Card {
 
         this.card = card;
     }
-    
+
     getCard() {
         return this.card;
     }

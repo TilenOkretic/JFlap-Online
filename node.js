@@ -15,10 +15,7 @@ class Node {
     }
 
     setPos(x, y) {
-        this.pos = {
-            x: x,
-            y: y
-        }
+        this.pos = createVector(x,y);
         return this.pos;
     }
 
@@ -98,7 +95,7 @@ class Node {
                 this.connections.push(connection);
                 this.hasNextState(connection);
                 input.remove();
-                load_automata();
+                automata.load_automata();
                 setEdit();
             }
         }, false);

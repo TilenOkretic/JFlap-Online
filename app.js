@@ -10,11 +10,12 @@ const EDIT_TYPE_LINK_NAME = 'link_name';
 /*###########################*/
 
 let edit = '';
-let NODES = [];
-
 let curMode = '';
+
 let node;
 let input;
+
+let automata;
 
 document.querySelectorAll('.sidebar-element').forEach(e => {
     e.addEventListener('click', () => {
@@ -23,41 +24,46 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
         new Card();
 
         node = null;
-
     });
 });
 
+document.getElementById('LA').addEventListener('click', ()=>{
+    automata = new DFA();
+}, true);
 
 
 function setup() {
     let canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent(document.querySelector('.app'));
     textFont('Play');
+
+    automata = new DFA();
 }
 
 
 function draw() {
 
     background(51);
-
-    for (let node of NODES) {
-        node.show();
-    }
-
+    
+    
     if (isCurrentMode(MODE_LINK_NODES) && node) {
         fill(0);
         line(node.pos.x, node.pos.y, mouseX, mouseY);
     }
-
-    drawConnections();
-
+    
+    
+    
+    automata.drawConnections();
+    for (let node of getAutomataNodes()) {
+        node.show();
+    }
 }
 
 function keyPressed() {
     if (key === 'Enter') {
 
     } else if (key === 'k') {
-        load_automata();
+        automata.load_automata();
     }
 }
 
@@ -73,7 +79,7 @@ function mousePressed() {
     if (isCurrentMode(MODE_ADD_NODES)) {
 
         if (!node && mouseButton === 'left' && mouseX > 50 && mouseY > 50 && mouseX < width - 50 && mouseY < height - 50) {
-            addNode(new Node(`q${NODES.length}`));
+            addNode(new Node(`q${getAutomataNodes().length}`));
         }
     } else if (isCurrentMode(MODE_EDIT_NODES)) {
 
@@ -97,13 +103,13 @@ function mousePressed() {
             if (!startNodeExist()) {
                 setCustomElement('start', wrapper, 'selector', () => {
                     node.setStart(!node.start);
-                    load_automata();
+                    automata.load_automata();
                 });
             }
 
             setCustomElement('finish', wrapper, 'selector', () => {
                 node.setFinish(!node.finish);
-                load_automata();
+                automata.load_automata();
             });
 
             document.addEventListener('contextmenu', event => event.preventDefault());
@@ -189,14 +195,14 @@ function doubleClicked() {
 
 
 
-/* Utils */
+/* Utils TODO: create a separate file for utils */
 
 function getNodeFromPos(pos) {
 
-    for (let i = 0; i < NODES.length; i++) {
-        let dis = sqrt((pos.x - NODES[i].pos.x) * (pos.x - NODES[i].pos.x) + (pos.y - NODES[i].pos.y) * (pos.y - NODES[i].pos.y));
-        if (dis < NODES[i].p) {
-            return NODES[i];
+    for (let i = 0; i < getAutomataNodes().length; i++) {
+        let dis = sqrt((pos.x - getAutomataNodes()[i].pos.x) * (pos.x - getAutomataNodes()[i].pos.x) + (pos.y - getAutomataNodes()[i].pos.y) * (pos.y - getAutomataNodes()[i].pos.y));
+        if (dis < getAutomataNodes()[i].p) {
+            return getAutomataNodes()[i];
         }
     }
 }
@@ -214,8 +220,8 @@ function setCustomElement(text, parent, elmClass = '', onSelected) {
 }
 
 function startNodeExist() {
-    for (let i = 0; i < NODES.length; i++) {
-        const node = NODES[i];
+    for (let i = 0; i < getAutomataNodes().length; i++) {
+        const node = getAutomataNodes()[i];
         if (node.start) {
             return true;
         }
@@ -278,7 +284,11 @@ function hasNode() {
 }
 
 function addNode(node) {
-    NODES.push(node);
+    getAutomataNodes().push(node);
     setNode(node);
     return node;
+}
+
+function getAutomataNodes() {
+    return automata.NODES;
 }

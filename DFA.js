@@ -1,132 +1,215 @@
-let final;
-let start;
+class DFA {
 
-let transitions = [];
+    constructor() {
+        this.transitions = [];
+        this.NODES = [];
+    }
+
+    load_automata() {
+        this.NODES.forEach(element => {
+            if (element.start) {
+                this.start = element;
+            } else if (element.finish) {
+                this.final = element;
+            }
+
+            this.load_transitions(element);
+        });
+    }
+
+    load_transitions(node) {
+        node.connections.forEach(conn => {
+
+            if (!this.transitions[conn.parent.name]) {
+                this.transitions[conn.parent.name] = [];
+            }
+            this.transitions[conn.parent.name][conn.rule] = conn.next_state;
+        });
+    }
 
 
-// main load 
-function load_automata() {
-    NODES.forEach(element => {
-        if (element.start) {
-            start = element;
-        } else if (element.finish) {
-            finish = element;
+
+    process_string(str) {
+        let next = this.transitions[this.start.name][str[0]];
+        for (let c = 1; c < str.length; c++) {
+            const char = str[c];
+            if (!next) {
+                return false;
+            }
+            next = this.transitions[next.name][char];
         }
 
-        load_transitions(element);
-    });
+        return next ? next.finish : false;
+    }
 
-    console.log(start);
-}
+    getNodeFromName(name) {
 
-function load_transitions(node) {
-    node.connections.forEach(conn => {
-        if (!transitions[conn.parent.name]) {
-            transitions[conn.parent.name] = {
-                arr: [],
-                rules: [conn.rule]
-            };
-        } else {
-            if (transitions[conn.parent.name].rules.indexOf(conn.rule) == -1) {
-                transitions[conn.parent.name].rules.push(conn.rule);
+        for (let i = 0; i < this.NODES.length; i++) {
+            const node = this.NODES[i];
+            if (node.name == name) {
+                return node;
             }
         }
-        transitions[conn.parent.name].arr[conn.rule] = conn.next_state;
-    });
-}
 
-function process_string(str) {
-    let next = transitions[start.name].arr[str[0]];
-    for (let c = 1; c < str.length; c++) {
-        const char = str[c];
-        if (!next) {
-            return false;
-        }
-        next = transitions[next.name].arr[char];
+        return;
+
     }
 
-    return next ? next.finish : false;
-}
+    drawConnections() {
 
+        for (let i = 0; i < this.NODES.length; i++) {
+            let node = this.NODES[i];
+            if (this.transitions[node.name]) {
+                for (var key in this.transitions[node.name]) {
+                    if (key === 'length' || !this.transitions[node.name].hasOwnProperty(key)) continue;
 
-document.getElementById('LA').addEventListener('click', load_automata, true);
+                    var other = this.transitions[node.name][key];
 
+                    let frules = "";
+                    let lst_tran = this.getTranstionsToState(this.transitions[node.name], other);
 
-function getNodeFromName(name) {
+                    for (let j = 0; j < lst_tran.length; j++) {
+                        const key = lst_tran[j];
+                        frules += key + ' ';
+                    }
 
-    for (let i = 0; i < NODES.length; i++) {
-        const node = NODES[i];
-        if (node.name == name) {
-            return node;
-        }
-    }
-
-    return;
-
-}
-
-function drawConnections() {
-
-    for (let i = 0; i < NODES.length; i++) {
-        let node = NODES[i];
-        if (transitions[node.name]) {
-            let arr = transitions[node.name].arr;
-            let rules = transitions[node.name].rules;
-            let frule = "";
-            for (let j = 0; j < rules.length; j++) {
-                if (j < rules.length - 1) {
-                    frule += `${rules[j]},`
-                } else {
-                    frule += `${rules[j]}`
+                    this.drawConnectionLine(frules, node, other);
                 }
-            }
 
-            let other = arr[rules[0]];
-            drawConnectionLine(frule, node, other);
+
+
+            }
         }
+
     }
 
+
+    getTranstionsToState(transition, state) {
+
+        let out = [];
+
+        for (var key in transition) {
+            if (key === 'length' || !transition.hasOwnProperty(key)) continue;
+            let val = transition[key];
+            if (val.name === state.name) {
+                out.push(key);
+            }
+        }
+
+
+
+        return out;
+    }
+
+    drawConnectionLine(rule, node, other) {
+        let node_vec = node.pos;
+        let other_vec = other.pos;
+
+
+        let v = p5.Vector.sub(other_vec, node_vec);
+
+        push();
+
+        translate(node_vec.x, node_vec.y);
+
+        if (node_vec.x < other_vec.x) {
+            noFill();
+            curveBetween(0, 0, v.x, v.y, 0.4, 0.05, 1);
+        } else {
+            noFill();
+            curveBetween(0, 0, v.x, v.y, 0.4, 0.05, 1);
+        }
+
+        translate(v.x, v.y);
+        rotate(v.heading() + PI / 16);
+
+        let triangle_offset = 8;
+
+        strokeWeight(3);
+
+        line(-other.p / 2, 3, -other.p / 2 - triangle_offset * 2.5, triangle_offset + 3);
+        line(-other.p / 2, 3, -other.p / 2 - triangle_offset * 2.5, -triangle_offset + 3);
+
+        pop();
+
+        push();
+
+        let off = 12;
+        // console.log(v.heading);
+        if(node_vec.x  < other_vec.x + 5 && node_vec.x > other_vec.x - 5 ){
+            if(node_vec.y > other_vec.y) {
+                translate(node_vec.x - off*2, node_vec.y - v.mag() / 2);
+                rotate(v.heading() + PI);
+                fill(255);
+                text(rule, 0, 0);
+            }else {
+                translate(node_vec.x + off, node_vec.y + v.mag() / 2);
+                rotate(v.heading());
+                fill(255);
+                text(rule, 0, 0);
+            }
+        }else if (v.heading() > 1.6) {
+            if (node_vec.x > other_vec.x) {
+                translate(node_vec.x, node_vec.y);
+                rotate(v.heading() + PI);
+                fill(255);
+                text(rule, -v.mag() / 2, off * 2);
+            } else {
+                translate(node_vec.x, node_vec.y);
+                rotate(v.heading() - PI);
+                fill(255);
+                text(rule, -v.mag() / 2, -off);
+            }
+        } else if (v.heading() < -1.6) {
+            if (node_vec.x > other_vec.x) {
+                translate(node_vec.x, node_vec.y);
+                rotate(v.heading() + PI);
+                fill(255);
+                text(rule, -v.mag() / 2, off * 2);
+            } else {
+                translate(node_vec.x, node_vec.y);
+                rotate(v.heading() - PI);
+                fill(255);
+                text(rule, -v.mag() / 2, -off);
+            }
+        } else {
+            if (node_vec.x > other_vec.x) {
+                translate(node_vec.x, node_vec.y);
+                rotate(v.heading());
+                fill(255);
+                text(rule, -v.mag() / 2, +off);
+            } else {
+                translate(node_vec.x, node_vec.y);
+                rotate(v.heading());
+                fill(255);
+                text(rule, v.mag() / 2, -off);
+            }
+        }
+
+
+        pop();
+    }
+
+
+    hasTranstion(parent, transition) {
+        parent.some((obj) => {
+            console.log(obj.next === transition.next);
+        });
+    }
 }
 
-function drawConnectionLine(rule, node, other) {
-    let x1 = node.pos.x;
-    let y1 = node.pos.y;
-    let r1 = node.p / 2;
 
-    let x2 = other.pos.x;
-    let y2 = other.pos.y;
-    let r2 = other.p / 2;
 
-    let ΔY = y2 - y1
-    let ΔX = x2 - x1
 
-    let L = sqrt((ΔX * ΔX + ΔY * ΔY));
-
-    let r1L = r1 / L;
-    let r2L = r2 / L;
-
-    let y12 = y1 + ΔY * r1L;
-    let y22 = y2 - ΔY * r2L;
-
-    let x12 = x1 + ΔX * r1L;
-    let x22 = x2 - ΔX * r2L;
-
-    let tx = (x12 + x22) / 2 + 14;
-    let ty = (y12 + y22) / 2 - 14;
-    // console.log(connection);
-    if (other.top) {
-        ty = (y12 + y22) / 2 + 24;
-    }
-
-    fill(255);
-    text(rule, tx, ty);
-    noFill();
-    strokeWeight(3);
-    beginShape();
-    vertex(x12, y12);
-
-    // TODO: line separation
-
-    vertex(x22, y22);
-    endShape();
+function curveBetween(x1, y1, x2, y2, d, h, flip) {
+    //find two control points off this line
+    var original = p5.Vector.sub(createVector(x2, y2), createVector(x1, y1));
+    var inline = original.copy().normalize().mult(original.mag() * d);
+    var rotated = inline.copy().rotate(radians(90) + flip * radians(180)).normalize().mult(original.mag() * h);
+    var p1 = p5.Vector.add(p5.Vector.add(inline, rotated), createVector(x1, y1));
+    //line(x1, y1, p1.x, p1.y); //show control line
+    rotated.mult(-1);
+    var p2 = p5.Vector.add(p5.Vector.add(inline, rotated).mult(-1), createVector(x2, y2));
+    //line(x2, y2, p2.x, p2.y); //show control line
+    bezier(x1, y1, p1.x, p1.y, p2.x, p2.y, x2, y2)
 }
