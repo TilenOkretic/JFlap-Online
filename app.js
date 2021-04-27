@@ -1,3 +1,4 @@
+
 /*##-MODES as const values-##*/
 const MODE_ADD_NODES = 'mode_add_nodes';
 const MODE_LINK_NODES = 'mode_link_nodes';
