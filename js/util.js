@@ -158,6 +158,7 @@ function curveBetween(x1, y1, x2, y2, d, h, flip) {
     function addNode(node) {
         getAutomataNodes().push(node);
         setNode(node);
+        automata.nodeIndex += 1;
         return node;
     }
 

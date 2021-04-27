@@ -4,6 +4,11 @@ class DFA {
     constructor() {
         this.transitions = [];
         this.NODES = [];
+        this.nodeIndex = 0;
+    }
+
+    getNodeIndex() {
+        return this.nodeIndex;
     }
 
     load_automata() {

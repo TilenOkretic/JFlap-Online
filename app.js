@@ -24,7 +24,7 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
     e.addEventListener('click', () => {
         setCurrentMode(e.title);
 
-        if(e.title === MODE_DELETE_NODES){
+        if (e.title === MODE_DELETE_NODES) {
             cursor(`${window.location.href}assets/cancel.png`);
         } else {
             cursor();
@@ -84,13 +84,13 @@ function keyPressed() {
 
 function mousePressed() {
 
-    if(isCurrentMode(MODE_DELETE_NODES)){
+    if (isCurrentMode(MODE_DELETE_NODES)) {
         node = getNodeFromPos({
             x: mouseX,
             y: mouseY
         });
 
-        if(node){
+        if (node) {
             automata.removeNode(node);
             node = null;
         }
@@ -111,7 +111,7 @@ function mousePressed() {
     if (isCurrentMode(MODE_ADD_NODES)) {
 
         if (!node && mouseButton === 'left' && mouseX > 50 && mouseY > 50 && mouseX < width - 50 && mouseY < height - 50) {
-            addNode(new Node(`q${getAutomataNodes().length}`));
+            addNode(new Node(`q${automata.getNodeIndex()}`));
         }
     } else if (isCurrentMode(MODE_EDIT_NODES)) {
 
