@@ -1,3 +1,4 @@
+let t;
 class DFA {
 
     constructor() {
@@ -9,10 +10,7 @@ class DFA {
         this.NODES.forEach(element => {
             if (element.start) {
                 this.start = element;
-            } else if (element.finish) {
-                this.final = element;
             }
-
             this.load_transitions(element);
         });
     }
@@ -133,58 +131,100 @@ class DFA {
         push();
 
         let off = 12;
+        let x;
+        let y;
         if (node_vec.x < other_vec.x + 5 && node_vec.x > other_vec.x - 5) {
             if (node_vec.y > other_vec.y) {
-                translate(node_vec.x - off * 2, node_vec.y - v.mag() / 2);
+                x = node_vec.x - off * 2;
+                y = node_vec.y - v.mag() / 2;
+                translate(x, y);
                 rotate(v.heading() + PI);
                 fill(255);
-                text(rule, 0, 0);
+                t = text(rule, 0, 0);
             } else {
-                translate(node_vec.x + off, node_vec.y + v.mag() / 2);
+                x = node_vec.x + off;
+                y = node_vec.y + v.mag() / 2;
+                translate(x, y);
                 rotate(v.heading());
                 fill(255);
-                text(rule, 0, 0);
+                t = text(rule, 0, 0);
             }
         } else if (v.heading() > 1.599) {
             if (node_vec.x > other_vec.x) {
-                translate(node_vec.x, node_vec.y);
+                x = node_vec.x;
+                y = node_vec.y;
+                translate(x, y);
                 rotate(v.heading() + PI);
                 fill(255);
-                text(rule, -v.mag() / 2, off * 2);
+                t = text(rule, -v.mag() / 2, off * 2);
             } else {
                 translate(node_vec.x, node_vec.y);
                 rotate(v.heading() - PI);
                 fill(255);
-                text(rule, -v.mag() / 2, -off);
+                t = text(rule, -v.mag() / 2, -off);
             }
         } else if (v.heading() < -1.599) {
             if (node_vec.x > other_vec.x) {
-                translate(node_vec.x, node_vec.y);
+                x = node_vec.x;
+                y = node_vec.y;
+                translate(x, y);
                 rotate(v.heading() + PI);
                 fill(255);
-                text(rule, -v.mag() / 2, off * 2);
+                t = text(rule, -v.mag() / 2, off * 2);
             } else {
-                translate(node_vec.x, node_vec.y);
+                x = node_vec.x;
+                y = node_vec.y;
+                translate(x, y);
                 rotate(v.heading() - PI);
                 fill(255);
-                text(rule, -v.mag() / 2, -off);
+                t = text(rule, -v.mag() / 2, -off);
             }
         } else {
             if (node_vec.x > other_vec.x) {
-                translate(node_vec.x, node_vec.y);
+                x = node_vec.x;
+                y = node_vec.y;
+                translate(x, y);
                 rotate(v.heading());
                 fill(255);
-                text(rule, -v.mag() / 2, +off);
+                t = text(rule, -v.mag() / 2, +off);
             } else {
-                translate(node_vec.x, node_vec.y);
+                x = node_vec.x;
+                y = node_vec.y;
+                translate(x, y);
                 rotate(v.heading());
                 fill(255);
-                text(rule, v.mag() / 2, -off);
+                t = text(rule, v.mag() / 2, -off);
             }
         }
 
+        if (this.isMouseOverText((node_vec.x + other_vec.x) / 2, (node_vec.y + other_vec.y) / 2)) {
+            console.log('true');
+            for (let i = 0; i < rule.split(',').length; i++) {
+                let one_rule = rule[i];
+
+                for (let key in this.transitions[node.name]) {
+                    if (key === 'length' || !this.transitions[node.name].hasOwnProperty(key)) continue;
+                    if (key === one_rule) {
+                        node.removeConnectionWithRule(one_rule);
+                        delete this.transitions[node.name][key];
+                    }
+                }
+            }
+        }
 
         pop();
+    }
+
+
+    isMouseOverText(x, y) {
+        if (mouseX > x - 15 && mouseX < x + 15) {
+            if (mouseY > y - 15 && mouseY < y + 15) {
+                if (mouseIsPressed && mouseButton === 'left') {
+                    return isCurrentMode(MODE_DELETE_NODES);
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -196,6 +236,10 @@ class DFA {
 
     removeNode(node) {
 
+        if (this.start && this.start.name == node.name) {
+            this.start = null;
+        }
+
         for (let i = 0; i < this.NODES.length; i++) {
             if (this.NODES[i].name === node.name) {
                 this.NODES.splice(i, 1);
@@ -206,13 +250,14 @@ class DFA {
                     for (let key2 in val) {
                         if (key2 === 'length' || !val.hasOwnProperty(key2)) continue;
                         let val2 = val[key2];
-                        if(val2.name == node.name){
+                        if (val2.name == node.name) {
+                            this.getNodeFromName(key).removeConnectionWithRule(key2);
                             delete this.transitions[key][key2]
                         }
-                        
+
                     }
 
-                    if(key == node.name){
+                    if (key == node.name) {
                         delete this.transitions[key]
                     }
                 }

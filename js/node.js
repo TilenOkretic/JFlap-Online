@@ -80,7 +80,7 @@ class Node {
 
         createInputBox('', 50, (event) => {
             if (event.key === 'Enter') {
-                if(this.hasConnectionWithRule(input.value())){
+                if (this.hasConnectionWithRule(input.value())) {
                     createCard('This node already has a transition with this rule!', 'red');
                     return;
                 } else {
@@ -98,14 +98,18 @@ class Node {
         return connection;
     }
 
-    hasConnectionWithRule(rule){
+    hasConnectionWithRule(rule) {
         for (let i = 0; i < this.connections.length; i++) {
-            if(this.connections[i].rule === rule){
+            if (this.connections[i].rule === rule) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    removeConnectionWithRule(rule) {
+        this.connections = this.connections.filter(data => data.rule != rule);
     }
 
     hasNextState(state) {
