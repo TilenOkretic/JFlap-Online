@@ -1,8 +1,8 @@
-
 /*##-MODES as const values-##*/
 const MODE_ADD_NODES = 'mode_add_nodes';
-const MODE_LINK_NODES = 'mode_link_nodes';
 const MODE_EDIT_NODES = 'mode_edit_nodes';
+const MODE_DELETE_NODES = 'mode_delete_nodes';
+const MODE_LINK_NODES = 'mode_link_nodes';
 
 const EDIT_TYPE_NODE_NAME = 'node_name';
 const EDIT_TYPE_NODE_MOVE = 'node_move';
@@ -16,11 +16,19 @@ let curMode = '';
 let input;
 let node;
 
+let canvas;
+
 let automata;
 
 document.querySelectorAll('.sidebar-element').forEach(e => {
     e.addEventListener('click', () => {
         setCurrentMode(e.title);
+
+        if(e.title === MODE_DELETE_NODES){
+            cursor(`${window.location.href}assets/cancel.png`);
+        } else {
+            cursor();
+        }
 
         createCard(getParsedMode(), 'limegreen');
 
@@ -36,11 +44,16 @@ document.getElementById('LA').addEventListener('click', () => {
 
 
 function setup() {
-    let canvas = createCanvas(windowWidth, windowHeight);
+    canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent(document.querySelector('.app'));
     textFont('Play');
 
     automata = new DFA();
+}
+
+// When zooming in and out the canvas resizes with the window
+function windowResized() {
+    canvas = resizeCanvas(windowWidth, windowHeight);
 }
 
 
@@ -71,12 +84,29 @@ function keyPressed() {
 
 function mousePressed() {
 
+    if(isCurrentMode(MODE_DELETE_NODES)){
+        node = getNodeFromPos({
+            x: mouseX,
+            y: mouseY
+        });
+
+        if(node){
+            automata.removeNode(node);
+            node = null;
+        }
+    }
+
+
+
+
     if (isCurrentMode(MODE_ADD_NODES) || isCurrentMode(MODE_LINK_NODES) && mouseButton != 'right' && !isEditType(EDIT_TYPE_LINK_NAME)) {
         node = getNodeFromPos({
             x: mouseX,
             y: mouseY
         });
     }
+
+
 
     if (isCurrentMode(MODE_ADD_NODES)) {
 
@@ -165,10 +195,8 @@ function doubleClicked() {
             createInputBox(node.name, 50, (event) => {
                 if (event.key === 'Enter') {
                     node.name = input.value();
-                    input.remove();
+                    removeInput();
                     automata.load_automata();
-                    input = null;
-                    setEditType();
                 }
             });
         }

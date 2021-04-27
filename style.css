@@ -86,9 +86,10 @@ select {
 .card {
     position: absolute;
     display: flex;
-    width: 210px;
+    width: 210px, auto;
     height: 20px;
-    transform: translate(-300px,0);
+    max-width: 600px;
+    /* transform: translate(-300px,0); */
 
     border-radius: 20px;
     
@@ -103,5 +104,4 @@ select {
     box-shadow: 3px 5px 30px black;
     
     transition: 800ms;
-
 }

@@ -133,19 +133,19 @@ class DFA {
         push();
 
         let off = 12;
-        if(node_vec.x  < other_vec.x + 5 && node_vec.x > other_vec.x - 5 ){
-            if(node_vec.y > other_vec.y) {
-                translate(node_vec.x - off*2, node_vec.y - v.mag() / 2);
+        if (node_vec.x < other_vec.x + 5 && node_vec.x > other_vec.x - 5) {
+            if (node_vec.y > other_vec.y) {
+                translate(node_vec.x - off * 2, node_vec.y - v.mag() / 2);
                 rotate(v.heading() + PI);
                 fill(255);
                 text(rule, 0, 0);
-            }else {
+            } else {
                 translate(node_vec.x + off, node_vec.y + v.mag() / 2);
                 rotate(v.heading());
                 fill(255);
                 text(rule, 0, 0);
             }
-        }else if (v.heading() > 1.599) {
+        } else if (v.heading() > 1.599) {
             if (node_vec.x > other_vec.x) {
                 translate(node_vec.x, node_vec.y);
                 rotate(v.heading() + PI);
@@ -192,5 +192,31 @@ class DFA {
         parent.some((obj) => {
             console.log(obj.next === transition.next);
         });
+    }
+
+    removeNode(node) {
+
+        for (let i = 0; i < this.NODES.length; i++) {
+            if (this.NODES[i].name === node.name) {
+                this.NODES.splice(i, 1);
+
+                for (let key in this.transitions) {
+                    if (key === 'length' || !this.transitions.hasOwnProperty(key)) continue;
+                    let val = this.transitions[key];
+                    for (let key2 in val) {
+                        if (key2 === 'length' || !val.hasOwnProperty(key2)) continue;
+                        let val2 = val[key2];
+                        if(val2.name == node.name){
+                            delete this.transitions[key][key2]
+                        }
+                        
+                    }
+
+                    if(key == node.name){
+                        delete this.transitions[key]
+                    }
+                }
+            }
+        }
     }
 }

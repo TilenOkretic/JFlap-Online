@@ -2,7 +2,7 @@ let createCard = (text = 'placeholder text', color = 'limegreen', x = 100, y = 0
 
     let card = document.createElement('div');
     card.className = 'card';
-    card.style.transform = 'translate(-300px, 0)';
+    card.style.transform = `translate(-${x}px, -${y}px)`;
     document.querySelector('.app').appendChild(card);
 
     setTimeout(() => {
@@ -12,8 +12,12 @@ let createCard = (text = 'placeholder text', color = 'limegreen', x = 100, y = 0
     }, 100);
 
     setTimeout(() => {
-        card.style.transform = 'translate(-300px,0)';
+        card.style.transform = `translate(-${card.getBoundingClientRect().width + 100}px,0)`;
+        setTimeout(() => {
+            card.remove();
+        }, 2000);
     }, 2000);
+
 
 };
 
@@ -47,14 +51,19 @@ let createWrapper = (node, automata) => {
 
 };
 
-let createInputBox = (text, size=50, keyPressEvent) => {
+let createInputBox = (text, size = 50, keyPressEvent) => {
     if (!input) {
         input = createInput(text);
         input.elt.id = 'input';
         input.elt.focus();
         input.size(size, size * 2 / 5);
         input.position(mouseX - size / 2, mouseY - size / 4);
-
+        document.getElementById("input").addEventListener("keydown", (event) => {
+            console.log(event.key);
+            if (event.key == 'Escape') {
+                removeInput();
+            }
+        });
         document.getElementById("input").addEventListener("keydown", keyPressEvent);
     } else {
         createCard('An Input already exists!');
@@ -62,6 +71,14 @@ let createInputBox = (text, size=50, keyPressEvent) => {
 
     return input;
 };
+
+function removeInput() {
+    if (input) {
+        input.remove();
+        input = null;
+        setEditType();
+    }
+}
 
 function setCustomElement(text, parent, elmClass = '', onSelected) {
     let elm = createDiv(`${text}`);
