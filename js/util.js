@@ -59,7 +59,6 @@ let createInputBox = (text, size = 50, keyPressEvent) => {
         input.size(size, size * 2 / 5);
         input.position(mouseX - size / 2, mouseY - size / 4);
         document.getElementById("input").addEventListener("keydown", (event) => {
-            console.log(event.key);
             if (event.key == 'Escape') {
                 removeInput();
             }

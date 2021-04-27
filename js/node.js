@@ -63,7 +63,6 @@ class Node {
         for (let i = 0; i < this.connections.length; i++) {
             const conn = this.connections[i];
             if (conn.rule == chars[i]) {
-                console.log(conn.next_state);
                 return conn.next_state.process_char(chars, ++i, conn.next_state);
             }
         }

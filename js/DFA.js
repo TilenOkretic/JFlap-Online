@@ -203,7 +203,6 @@ class DFA {
         }
 
         if (this.isMouseOverText((node_vec.x + other_vec.x) / 2, (node_vec.y + other_vec.y) / 2)) {
-            console.log('true');
             for (let i = 0; i < rule.split(',').length; i++) {
                 let one_rule = rule[i];
 
@@ -233,11 +232,11 @@ class DFA {
     }
 
 
-    hasTranstion(parent, transition) {
-        parent.some((obj) => {
-            console.log(obj.next === transition.next);
-        });
-    }
+    // hasTranstion(parent, transition) {
+    //     parent.some((obj) => {
+    //         console.log(obj.next === transition.next);
+    //     });
+    // }
 
     removeNode(node) {
 
