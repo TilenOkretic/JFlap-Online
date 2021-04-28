@@ -10,6 +10,8 @@ const EDIT_TYPE_NODE_MOVE = 'node_move';
 const EDIT_TYPE_NODE_FUNCTION = 'node_function';
 const EDIT_TYPE_LINK_NAME = 'link_name';
 
+const EMPTY_RULE = 'ɛ'; 
+
 
 /*###########################################################*/
 let createCard = (text = 'placeholder text', color = 'limegreen', x = 100, y = 0) => {

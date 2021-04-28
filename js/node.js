@@ -79,14 +79,20 @@ class Node {
 
         createInputBox('', 50, (event) => {
             if (event.key === 'Enter') {
-                if (this.hasConnectionWithRule(input.value())) {
-                    createCard('This node already has a transition with this rule!', 'red');
-                    return;
-                } else {
-                    connection.rule = input.value();
-                    this.connections.push(connection);
-                    this.hasNextState(connection);
+
+                let rule = EMPTY_RULE;
+
+                if (input.value()) {
+                    if (this.hasConnectionWithRule(input.value())) {
+                        createCard('This node already has a transition with this rule!', 'red');
+                        return;
+                    } else {
+                        rule = input.value();
+                    }
                 }
+                connection.rule = rule;
+                this.connections.push(connection);
+                this.hasNextState(connection);
                 removeInput();
                 automata.load_automata();
             }
