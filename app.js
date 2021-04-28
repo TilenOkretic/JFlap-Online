@@ -1,15 +1,3 @@
-/*##-MODES as const values-##*/
-const MODE_ADD_NODES = 'mode_add_nodes';
-const MODE_EDIT_NODES = 'mode_edit_nodes';
-const MODE_DELETE_NODES = 'mode_delete_nodes';
-const MODE_LINK_NODES = 'mode_link_nodes';
-
-const EDIT_TYPE_NODE_NAME = 'node_name';
-const EDIT_TYPE_NODE_MOVE = 'node_move';
-const EDIT_TYPE_NODE_FUNCTION = 'node_function';
-const EDIT_TYPE_LINK_NAME = 'link_name';
-
-/*###########################*/
 
 let edit = '';
 let curMode = '';

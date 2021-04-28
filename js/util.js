@@ -1,3 +1,17 @@
+/*#####################-CONST VALUES-########################*/
+
+const MODE_ADD_NODES = 'mode_add_nodes';
+const MODE_EDIT_NODES = 'mode_edit_nodes';
+const MODE_DELETE_NODES = 'mode_delete_nodes';
+const MODE_LINK_NODES = 'mode_link_nodes';
+
+const EDIT_TYPE_NODE_NAME = 'node_name';
+const EDIT_TYPE_NODE_MOVE = 'node_move';
+const EDIT_TYPE_NODE_FUNCTION = 'node_function';
+const EDIT_TYPE_LINK_NAME = 'link_name';
+
+
+/*###########################################################*/
 let createCard = (text = 'placeholder text', color = 'limegreen', x = 100, y = 0) => {
 
     let card = document.createElement('div');
@@ -105,110 +119,109 @@ function curveBetween(x1, y1, x2, y2, d, h, flip) {
 }
 
 /*#####################-Nodes-###############################*/
-{
-    function getNodeFromPos(pos) {
 
-        for (let i = 0; i < getAutomataNodes().length; i++) {
-            let dis = sqrt((pos.x - getAutomataNodes()[i].pos.x) * (pos.x - getAutomataNodes()[i].pos.x) + (pos.y - getAutomataNodes()[i].pos.y) * (pos.y - getAutomataNodes()[i].pos.y));
-            if (dis < getAutomataNodes()[i].p) {
-                return getAutomataNodes()[i];
-            }
+function getNodeFromPos(pos) {
+
+    for (let i = 0; i < getAutomataNodes().length; i++) {
+        let dis = sqrt((pos.x - getAutomataNodes()[i].pos.x) * (pos.x - getAutomataNodes()[i].pos.x) + (pos.y - getAutomataNodes()[i].pos.y) * (pos.y - getAutomataNodes()[i].pos.y));
+        if (dis < getAutomataNodes()[i].p) {
+            return getAutomataNodes()[i];
         }
-    }
-
-    function startNodeExist() {
-        for (let i = 0; i < getAutomataNodes().length; i++) {
-            const node = getAutomataNodes()[i];
-            if (node.start) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function getStartNode() {
-
-        if (!startNodeExist()) {
-            return;
-        }
-
-        for (let i = 0; i < getAutomataNodes().length; i++) {
-            const node = getAutomataNodes()[i];
-            if (node.start) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    function setNode(new_node) {
-        node = new_node;
-        return node;
-    }
-
-    function getNode() {
-        return node;
-    }
-
-    function hasNode() {
-        return node ? true : false;
-    }
-
-    function addNode(node) {
-        getAutomataNodes().push(node);
-        setNode(node);
-        automata.nodeIndex += 1;
-        return node;
-    }
-
-    function getAutomataNodes() {
-        return automata.NODES;
     }
 }
+
+function startNodeExist() {
+    for (let i = 0; i < getAutomataNodes().length; i++) {
+        const node = getAutomataNodes()[i];
+        if (node.start) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function getStartNode() {
+
+    if (!startNodeExist()) {
+        return;
+    }
+
+    for (let i = 0; i < getAutomataNodes().length; i++) {
+        const node = getAutomataNodes()[i];
+        if (node.start) {
+            return node;
+        }
+    }
+    return null;
+}
+
+function setNode(new_node) {
+    node = new_node;
+    return node;
+}
+
+function getNode() {
+    return node;
+}
+
+function hasNode() {
+    return node ? true : false;
+}
+
+function addNode(node) {
+    getAutomataNodes().push(node);
+    setNode(node);
+    automata.nodeIndex += 1;
+    return node;
+}
+
+function getAutomataNodes() {
+    return automata.NODES;
+}
+
 /*###########################################################*/
 
 /*#####################-Modes-###############################*/
-{
-    function getCurrentMode() {
-        return curMode;
-    }
-
-    function setCurrentMode(mode) {
-        curMode = mode;
-        return this.curMode;
-    }
-
-    function getParsedMode() {
-        let tmp = curMode.split('_');
-        tmp = tmp.slice(1, tmp.length);
-        let out = "";
-        tmp.forEach((c) => {
-            out += c + " ";
-        });
-        return out;
-    }
-
-    function isCurrentMode(mode) {
-        return getCurrentMode() === mode;
-    }
-
-    function isEditingMode() {
-        return isCurrentMode(MODE_EDIT_NODES) || isCurrentMode(MODE_LINK_NODES);
-    }
-
-    function setEditType(type = '') {
-        edit = type;
-        return edit;
-    }
-
-    function getEditType() {
-        return isEditingMode() ? edit : 'not editing';
-    }
-
-    function isEditType(type) {
-        return getEditType() === type;
-    }
+function getCurrentMode() {
+    return curMode;
 }
+
+function setCurrentMode(mode) {
+    curMode = mode;
+    return this.curMode;
+}
+
+function getParsedMode() {
+    let tmp = curMode.split('_');
+    tmp = tmp.slice(1, tmp.length);
+    let out = "";
+    tmp.forEach((c) => {
+        out += c + " ";
+    });
+    return out;
+}
+
+function isCurrentMode(mode) {
+    return getCurrentMode() === mode;
+}
+
+function isEditingMode() {
+    return isCurrentMode(MODE_EDIT_NODES) || isCurrentMode(MODE_LINK_NODES);
+}
+
+function setEditType(type = '') {
+    edit = type;
+    return edit;
+}
+
+function getEditType() {
+    return isEditingMode() ? edit : 'not editing';
+}
+
+function isEditType(type) {
+    return getEditType() === type;
+}
+
 /*###########################################################*/
 
 /*#####################-Transitions-#########################*/

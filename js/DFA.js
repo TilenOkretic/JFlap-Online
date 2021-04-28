@@ -37,6 +37,9 @@ class DFA {
             if (!next) {
                 return false;
             }
+            if(!this.transitions[next.name]){
+                return false;
+            }
             next = this.transitions[next.name][char];
         }
 
@@ -84,7 +87,6 @@ class DFA {
 
     }
 
-
     getTranstionsToState(transition, state) {
 
         let out = [];
@@ -107,29 +109,54 @@ class DFA {
         let other_vec = other.pos;
 
 
+        let triangle_offset = 8;
         let v = p5.Vector.sub(other_vec, node_vec);
 
         push();
 
         translate(node_vec.x, node_vec.y);
 
-        if (node_vec.x < other_vec.x) {
+        noFill();
+        if (node.name === other.name) {
+
+            beginShape();
+            curveVertex(-6, 0);
+
+            curveVertex(-8, -node.p/2);
+            curveVertex(-1, -node.p/2 * 2);
+            curveVertex(8, -node.p/2);
+
+            curveVertex(6, 20);
+
+            endShape();
+
+            fill(255);
+            text(rule, 0, -node.p *1.05);
             noFill();
-            curveBetween(0, 0, v.x, v.y, 0.4, 0.05, 1);
         } else {
-            noFill();
-            curveBetween(0, 0, v.x, v.y, 0.4, 0.05, 1);
+
+            if (node_vec.x < other_vec.x) {
+                noFill();
+                curveBetween(0, 0, v.x, v.y, 0.4, 0.05, 1);
+            } else {
+                noFill();
+                curveBetween(0, 0, v.x, v.y, 0.4, 0.05, 1);
+            }
         }
 
-        translate(v.x, v.y);
-        rotate(v.heading() + PI / 16);
 
-        let triangle_offset = 8;
 
-        strokeWeight(3);
+        if(node.name == other.name){
+            line(8, -node.p/2, 2, -node.p * 0.7);
+            line(8, -node.p/2, 11, -node.p * 0.7);
 
-        line(-other.p / 2, 3, -other.p / 2 - triangle_offset * 2.5, triangle_offset + 3);
-        line(-other.p / 2, 3, -other.p / 2 - triangle_offset * 2.5, -triangle_offset + 3);
+        }else {
+            translate(v.x, v.y);
+            rotate(v.heading() + PI / 16);
+            strokeWeight(3);
+            line(-other.p / 2, 3, -other.p / 2 - triangle_offset * 2.5, triangle_offset + 3);
+            line(-other.p / 2, 3, -other.p / 2 - triangle_offset * 2.5, -triangle_offset + 3);
+        }
 
         pop();
 
