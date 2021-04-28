@@ -136,6 +136,10 @@ class DFA {
             fill(255);
             text(rule, 0, -node.p * 1.05);
             noFill();
+
+            // triangle when connected to slef 
+            line(8, -node.p / 2, 2, -node.p * 0.7);
+            line(8, -node.p / 2, 11, -node.p * 0.7);
             pop();
         } else {
 
@@ -148,8 +152,6 @@ class DFA {
             }
         }
         if (node.name === other.name) {
-            line(8, -node.p / 2, 2, -node.p * 0.7);
-            line(8, -node.p / 2, 11, -node.p * 0.7);
 
             if(this.isMouseOverText(node_vec.x, node_vec.y-node.p * 1.05)){
                 for (let i = 0; i < rule.split(',').length; i++) {
