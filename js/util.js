@@ -4,13 +4,14 @@ const MODE_ADD_NODES = 'mode_add_nodes';
 const MODE_EDIT_NODES = 'mode_edit_nodes';
 const MODE_DELETE_NODES = 'mode_delete_nodes';
 const MODE_LINK_NODES = 'mode_link_nodes';
+const MODE_RUN_INPUTS = 'mode_run_inputs';
 
 const EDIT_TYPE_NODE_NAME = 'node_name';
 const EDIT_TYPE_NODE_MOVE = 'node_move';
 const EDIT_TYPE_NODE_FUNCTION = 'node_function';
 const EDIT_TYPE_LINK_NAME = 'link_name';
 
-const EMPTY_RULE = 'ɛ'; 
+const EMPTY_RULE = 'ɛ';
 
 
 /*###########################################################*/
@@ -67,13 +68,17 @@ let createWrapper = (node, automata) => {
 
 };
 
-let createInputBox = (text, size = 50, keyPressEvent) => {
+let createInputBox = (text, size = 50, keyPressEvent, pos) => {
     if (!input) {
         input = createInput(text);
         input.elt.id = 'input';
         input.elt.focus();
         input.size(size, size * 2 / 5);
-        input.position(mouseX - size / 2, mouseY - size / 4);
+        if (pos) {
+            input.position(pos.x, pos.y);
+        } else {
+            input.position(mouseX - size / 2, mouseY - size / 4);
+        }
         document.getElementById("input").addEventListener("keydown", (event) => {
             if (event.key == 'Escape') {
                 removeInput();
@@ -87,11 +92,85 @@ let createInputBox = (text, size = 50, keyPressEvent) => {
     return input;
 };
 
+let createTable = () => {
+    let workspace = document.querySelector('.workspace');
+    let holder = document.createElement('div');
+    holder.className = 'bottom_holder';
+
+
+    let pane = document.createElement('div');
+    pane.className = 'pane';
+
+    let table = document.createElement('div');
+    table.className = 'input_table';
+
+    addInputToTable(table);
+
+    pane.appendChild(table);
+
+    let btn = document.createElement('button');
+    btn.textContent = 'Run';
+    btn.style.width = '120px';
+    btn.style.marginTop = '2rem';
+
+    btn.addEventListener('click', () => {
+        for (let i = 0; i < table.children.length; i++) {
+            let pocket_elements = table.children[i].children;
+            for (let j = 0; j < pocket_elements.length; j++) {
+                const input_text = pocket_elements[j].children[0].value; 
+                const label = pocket_elements[j].children[1]; 
+                if(input_text){
+                    let out = automata.process_string(input_text);
+                    label.textContent = out ? "Accepted" : "Rejected";
+                }
+            }
+        }
+    });
+
+    holder.appendChild(pane);
+    holder.appendChild(btn);
+
+    workspace.appendChild(holder);
+};
+
 function removeInput() {
     if (input) {
         input.remove();
         input = null;
         setEditType();
+    }
+}
+
+function addInputToTable(table) {
+    let inp;
+    let lab;
+    let pocket;
+    if(table.children.length == 0 || document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length-1].children.length % 4 == 0){
+        pocket = document.createElement('div');
+        pocket.className = 'pocket';
+    }else {
+        pocket = document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length-1];
+    }
+    let row = document.createElement('div');
+
+    inp = document.createElement('input');
+    inp.addEventListener('click', () => {
+        if (!inp.className.includes('extended')) {
+            addInputToTable(table);
+            inp.className += 'extended';
+        }
+    });
+    lab = document.createElement('lable');
+    lab.style.color = 'white';
+    lab.style.marginLeft = '2rem';
+
+    row.appendChild(inp);
+    row.appendChild(lab);
+    pocket.appendChild(row);
+    pocket.style.marginRight = '2rem';
+    
+    if(table.children.length == 0 || document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length-1].children.length % 4 == 0){
+        table.appendChild(pocket);
     }
 }
 

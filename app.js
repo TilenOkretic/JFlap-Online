@@ -1,4 +1,3 @@
-
 let edit = '';
 let curMode = '';
 let input;
@@ -18,6 +17,27 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
             cursor();
         }
 
+        if (e.title === MODE_RUN_INPUTS) {
+            canvas = resizeCanvas(windowWidth, windowHeight);
+            let holder = document.querySelector('.bottom_holder');
+            if(holder){
+                holder.style.display ='';
+                document.querySelector('.workspace_canvas').style.overflow='scroll';
+                document.querySelector('.workspace_canvas').style.overflowX='hidden';
+            }else {
+                createTable();
+                document.querySelector('.workspace_canvas').style.overflow='scroll';
+                document.querySelector('.workspace_canvas').style.overflowX='hidden';
+            }
+        } else {
+            canvas = resizeCanvas(windowWidth, windowHeight);
+            let holder = document.querySelector('.bottom_holder');
+            if(holder){
+                document.querySelector('.workspace_canvas').style.overflow='hidden';
+                holder.style.display = 'none';
+            }
+        }
+
         createCard(getParsedMode(), 'limegreen');
 
         node = null;
@@ -27,13 +47,20 @@ document.querySelectorAll('.sidebar-element').forEach(e => {
 document.getElementById('LA').addEventListener('click', () => {
     automata = new DFA();
 
+    let holder = document.querySelector('.bottom_holder');
+    if(holder){
+        holder.remove();
+        holder = null;
+    }
+
     createCard('Automata Workspace Reset', 'orange');
 }, true);
 
 
 function setup() {
+    let workspace = document.querySelector('.workspace');
     canvas = createCanvas(windowWidth, windowHeight);
-    canvas.parent(document.querySelector('.app'));
+    canvas.parent(document.querySelector('.workspace_canvas'));
     textFont('Play');
 
     automata = new DFA();

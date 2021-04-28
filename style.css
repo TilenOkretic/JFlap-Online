@@ -16,6 +16,11 @@
 
 }
 
+.workspace {
+    display: flex;
+    flex-direction: column;
+}
+
 .sidebar {
     padding: 4px;
     padding-right: 10px;
@@ -104,4 +109,31 @@ select {
     box-shadow: 3px 5px 30px black;
     
     transition: 800ms;
+}
+
+.bottom_holder {
+    height: 50%;
+    background-color: rgb(30,30, 30);
+    padding: 1rem;
+
+    border: 15px solid rgb(10,10,10);
+    border-bottom: none;
+
+    box-shadow: 10px 10px 20px black;
+}
+
+.workspace_canvas {
+    overflow-x: hidden;
+    border: 15px solid rgb(10,10,10);
+    border-bottom: none;
+    
+}
+
+.pane {
+    max-height: 70%;
+}
+
+.input_table {
+    display: flex;
+    flex-direction: row;
 }
