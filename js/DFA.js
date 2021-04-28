@@ -227,20 +227,20 @@ class DFA {
                     t = text(rule, -v.mag() / 2, -off);
                 }
             } else {
-                if (node_vec.x > other_vec.x) {
-                    x = node_vec.x;
-                    y = node_vec.y;
-                    translate(x, y);
-                    rotate(v.heading());
-                    fill(255);
-                    t = text(rule, -v.mag() / 2, +off);
-                } else {
+                if (node_vec.x >= other_vec.x) {
                     x = node_vec.x;
                     y = node_vec.y;
                     translate(x, y);
                     rotate(v.heading());
                     fill(255);
                     t = text(rule, v.mag() / 2, -off);
+                } else {
+                    x = node_vec.x;
+                    y = node_vec.y;
+                    translate(x, y);
+                    rotate(v.heading());
+                    fill(255);
+                    t = text(rule, v.mag() / 2, -off * 2);
                 }
             }
 

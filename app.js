@@ -9,31 +9,36 @@ let automata;
 
 document.querySelectorAll('.sidebar-element').forEach(e => {
     e.addEventListener('click', () => {
-        setCurrentMode(e.title);
+        setCurrentMode(e.value);
 
-        if (e.title === MODE_DELETE_NODES) {
+        if (e.value === MODE_DELETE_NODES) {
             cursor(`${window.location.href}assets/cancel.png`);
         } else {
             cursor();
         }
 
-        if (e.title === MODE_RUN_INPUTS) {
+        if (e.value === MODE_RUN_INPUTS) {
             canvas = resizeCanvas(windowWidth, windowHeight);
             let holder = document.querySelector('.bottom_holder');
             if(holder){
                 holder.style.display ='';
                 document.querySelector('.workspace_canvas').style.overflow='scroll';
                 document.querySelector('.workspace_canvas').style.overflowX='hidden';
+                document.querySelector('.workspace_canvas').style.border='15px solid rgb(10,10,10)';
+                document.querySelector('.workspace_canvas').style.borderBottom='none';
             }else {
                 createTable();
                 document.querySelector('.workspace_canvas').style.overflow='scroll';
                 document.querySelector('.workspace_canvas').style.overflowX='hidden';
+                document.querySelector('.workspace_canvas').style.border='15px solid rgb(10,10,10)';
+                document.querySelector('.workspace_canvas').style.borderBottom='none';
             }
         } else {
             canvas = resizeCanvas(windowWidth, windowHeight);
             let holder = document.querySelector('.bottom_holder');
             if(holder){
                 document.querySelector('.workspace_canvas').style.overflow='hidden';
+                document.querySelector('.workspace_canvas').style.border='none';
                 holder.style.display = 'none';
             }
         }

@@ -43,6 +43,9 @@
 
     margin: 0.5rem;
     margin-top: 0.75rem;
+
+    outline: none;
+    border: none;
 }
 
 .sidebar-element:hover {
@@ -124,8 +127,6 @@ select {
 
 .workspace_canvas {
     overflow-x: hidden;
-    border: 15px solid rgb(10,10,10);
-    border-bottom: none;
     
 }
 
