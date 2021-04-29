@@ -81,9 +81,6 @@ class DFA {
 
                     this.drawConnectionLine(frules, node, other);
                 }
-
-
-
             }
         }
 
