@@ -93,7 +93,7 @@ let createTable = () => {
     btn.style.marginTop = '2rem';
 
     btn.addEventListener('click', () => {
-        if (!workspace.automata.hasStartNode()) {
+        if (!getAutomata().hasStartNode()) {
             createCard('No START node available!', 'red');
             return;
         }
@@ -103,7 +103,7 @@ let createTable = () => {
                 const input_text = pocket_elements[j].children[0].value;
                 const label = pocket_elements[j].children[1];
                 if (input_text) {
-                    let out = workspace.automata.process_string(input_text);
+                    let out = getAutomata().process_string(input_text);
                     label.textContent = out ? "Accepted" : "Rejected";
                 }
             }
@@ -235,12 +235,16 @@ function hasNode() {
 function addNode(node) {
     getAutomataNodes().push(node);
     setNode(node);
-    workspace.automata.nodeIndex += 1;
+    getAutomata().nodeIndex += 1;
     return getNode();
 }
 
 function getAutomataNodes() {
     return workspace.getAutomataNodes();
+}
+
+function getAutomata() {
+    return workspace.automata;
 }
 
 /*###########################################################*/
