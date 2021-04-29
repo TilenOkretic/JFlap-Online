@@ -72,7 +72,7 @@ let createWrapper = (node, automata) => {
 };
 
 let createTable = () => {
-    let workspace = document.querySelector('.workspace');
+    let workspace_div = document.querySelector('.workspace');
     let holder = document.createElement('div');
     holder.className = 'bottom_holder';
 
@@ -93,7 +93,7 @@ let createTable = () => {
     btn.style.marginTop = '2rem';
 
     btn.addEventListener('click', () => {
-        if (!automata.hasStartNode()) {
+        if (!workspace.automata.hasStartNode()) {
             createCard('No START node available!', 'red');
             return;
         }
@@ -103,7 +103,7 @@ let createTable = () => {
                 const input_text = pocket_elements[j].children[0].value;
                 const label = pocket_elements[j].children[1];
                 if (input_text) {
-                    let out = automata.process_string(input_text);
+                    let out = workspace.automata.process_string(input_text);
                     label.textContent = out ? "Accepted" : "Rejected";
                 }
             }
@@ -113,7 +113,7 @@ let createTable = () => {
     holder.appendChild(pane);
     holder.appendChild(btn);
 
-    workspace.appendChild(holder);
+    workspace_div.appendChild(holder);
 };
 
 function removeInput() {
@@ -137,7 +137,7 @@ function addInputToTable(table) {
     let row = document.createElement('div');
 
     inp = document.createElement('input');
-    inp.addEventListener('click', () => {
+    inp.addEventListener('focus', () => {
         if (!inp.className.includes('extended')) {
             addInputToTable(table);
             inp.className += 'extended';
@@ -235,12 +235,12 @@ function hasNode() {
 function addNode(node) {
     getAutomataNodes().push(node);
     setNode(node);
-    automata.nodeIndex += 1;
+    workspace.automata.nodeIndex += 1;
     return getNode();
 }
 
 function getAutomataNodes() {
-    return automata.NODES;
+    return workspace.getAutomataNodes();
 }
 
 /*###########################################################*/

@@ -94,7 +94,7 @@ class Node {
                 this.connections.push(connection);
                 this.hasNextState(connection);
                 removeInput();
-                automata.load_automata();
+                workspace.automata.load_automata();
             }
         }).position((next_state.pos.x + this.pos.x) / 2, 0.5 * (next_state.pos.y + this.pos.y));
 

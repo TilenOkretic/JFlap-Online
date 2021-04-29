@@ -17,7 +17,19 @@
 
 <body>
 
-    <div class="app" id='app'>
+    <div class="preload">
+
+        <div class="title"><h1>Wellcome to JFlap-Online</h1></div>
+
+        <div class="btns">
+            <button id="DFA">DFA</button>
+            <button id="NFA">NFA</button>
+            <button id="e-NFA">E-NFA</button>
+        </div>
+
+    </div>
+
+    <div class="app" style="display: none;">
 
         <div class="sidebar">
             <button value='mode_edit_nodes' title="Edit Nodes" class="sidebar-element"><svg viewBox="0 -1 24 24" width="38" height="38"
@@ -73,8 +85,9 @@
             <div class="workspace_canvas"></div>
         </div>
 
-
     </div>
+
+    <script src="./js/workspaces/DFAWorkspace.js"></script>
 
     <script src="./js/util.js"></script>
     <script src="./js/node.js"></script>

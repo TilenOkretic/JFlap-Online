@@ -61,7 +61,7 @@ class DFA {
 
     }
 
-    drawConnections() {
+    render() {
 
         for (let i = 0; i < this.NODES.length; i++) {
             let node = this.NODES[i];
@@ -85,6 +85,10 @@ class DFA {
 
 
             }
+        }
+
+        for(let node of this.NODES){
+            node.show();
         }
 
     }
@@ -188,7 +192,7 @@ class DFA {
                     translate(x, y);
                     rotate(v.heading() + PI);
                     fill(255);
-                    t = text(rule, 0, 0);
+                    text(rule, 0, 0);
                 } else {
                     x = node_vec.x + off;
                     y = node_vec.y + v.mag() / 2;
