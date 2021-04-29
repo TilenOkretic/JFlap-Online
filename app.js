@@ -47,7 +47,9 @@ function setup() {
     });
     
     document.querySelector('#NFA').addEventListener('click', () => {
-        alert('Not implemented yet');
+        workspace = new NFAWorkspace();
+        document.querySelector('.preload').style.display = 'none';
+        document.querySelector('.app').style.display = '';
     });
 
     

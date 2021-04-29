@@ -1,4 +1,4 @@
-class DFA {
+class AutomatonBase {
 
     constructor() {
         this.transitions = [];
@@ -30,22 +30,6 @@ class DFA {
     }
 
     process_string(str) {
-        if (!this.transitions[this.start.name]) {
-            return false;
-        }
-        let next = this.transitions[this.start.name][str[0]];
-        for (let c = 1; c < str.length; c++) {
-            const char = str[c];
-            if (!next) {
-                return false;
-            }
-            if (!this.transitions[next.name]) {
-                return false;
-            }
-            next = this.transitions[next.name][char];
-        }
-
-        return next ? next.finish : false;
     }
 
     getNodeFromName(name) {
@@ -263,7 +247,6 @@ class DFA {
             pop();
         }
     }
-
 
     isMouseOverText(x, y) {
         if (mouseX > x - 15 && mouseX < x + 15) {

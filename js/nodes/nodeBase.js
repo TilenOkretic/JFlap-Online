@@ -1,4 +1,4 @@
-class Node {
+class NodeBase {
     constructor(name) {
         this.setPos(mouseX, mouseY);
         this.name = name;
