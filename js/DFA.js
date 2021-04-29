@@ -1,4 +1,3 @@
-let t;
 class DFA {
 
     constructor() {
@@ -196,7 +195,7 @@ class DFA {
                     translate(x, y);
                     rotate(v.heading());
                     fill(255);
-                    t = text(rule, 0, 0);
+                    text(rule, 0, 0);
                 }
             } else if (v.heading() > 1.599) {
                 if (node_vec.x > other_vec.x) {
@@ -205,12 +204,12 @@ class DFA {
                     translate(x, y);
                     rotate(v.heading() + PI);
                     fill(255);
-                    t = text(rule, -v.mag() / 2, off * 2);
+                    text(rule, -v.mag() / 2, off * 2);
                 } else {
                     translate(node_vec.x, node_vec.y);
                     rotate(v.heading() - PI);
                     fill(255);
-                    t = text(rule, -v.mag() / 2, -off);
+                    text(rule, -v.mag() / 2, -off);
                 }
             } else if (v.heading() < -1.599) {
                 if (node_vec.x > other_vec.x) {
@@ -219,14 +218,14 @@ class DFA {
                     translate(x, y);
                     rotate(v.heading() + PI);
                     fill(255);
-                    t = text(rule, -v.mag() / 2, off * 2);
+                    text(rule, -v.mag() / 2, off * 2);
                 } else {
                     x = node_vec.x;
                     y = node_vec.y;
                     translate(x, y);
                     rotate(v.heading() - PI);
                     fill(255);
-                    t = text(rule, -v.mag() / 2, -off);
+                    text(rule, -v.mag() / 2, -off);
                 }
             } else {
                 if (node_vec.x >= other_vec.x) {
@@ -235,14 +234,14 @@ class DFA {
                     translate(x, y);
                     rotate(v.heading());
                     fill(255);
-                    t = text(rule, v.mag() / 2, -off);
+                    text(rule, v.mag() / 2, -off);
                 } else {
                     x = node_vec.x;
                     y = node_vec.y;
                     translate(x, y);
                     rotate(v.heading());
                     fill(255);
-                    t = text(rule, v.mag() / 2, -off * 2);
+                    text(rule, v.mag() / 2, -off * 2);
                 }
             }
 

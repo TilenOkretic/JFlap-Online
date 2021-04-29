@@ -13,7 +13,6 @@ const EDIT_TYPE_LINK_NAME = 'link_name';
 
 const EMPTY_RULE = 'ɛ';
 
-
 /*###########################################################*/
 let createCard = (text = 'placeholder text', color = 'limegreen', x = 100, y = 0) => {
 
@@ -40,6 +39,10 @@ let createCard = (text = 'placeholder text', color = 'limegreen', x = 100, y = 0
 
 let createWrapper = (node, automata) => {
 
+    if (!node) {
+        createCard('RIGHT CLICK ON A NODE!', 'red');
+        return;
+    }
     let wrapper = document.querySelector('.wrapper');
 
     if (wrapper) {
@@ -52,12 +55,12 @@ let createWrapper = (node, automata) => {
     wrapper.addClass('wrapper');
 
     setCustomElement('start', wrapper, 'selector', () => {
-        if (startNodeExist()) {
-            if (getStartNode() != node) {
+        if (startNodeExists()) {
+            if (getStartNode() != getNode()) {
                 createCard('Start node is already defined!', 'red');
             }
         }
-        node.setStart(!startNodeExist());
+        node.setStart(!startNodeExists());
         automata.load_automata();
     });
 
@@ -66,30 +69,6 @@ let createWrapper = (node, automata) => {
         automata.load_automata();
     });
 
-};
-
-let createInputBox = (text, size = 50, keyPressEvent, pos) => {
-    if (!input) {
-        input = createInput(text);
-        input.elt.id = 'input';
-        input.elt.focus();
-        input.size(size, size * 2 / 5);
-        if (pos) {
-            input.position(pos.x, pos.y);
-        } else {
-            input.position(mouseX - size / 2, mouseY - size / 4);
-        }
-        document.getElementById("input").addEventListener("keydown", (event) => {
-            if (event.key == 'Escape') {
-                removeInput();
-            }
-        });
-        document.getElementById("input").addEventListener("keydown", keyPressEvent);
-    } else {
-        createCard('An Input already exists!');
-    }
-
-    return input;
 };
 
 let createTable = () => {
@@ -114,16 +93,16 @@ let createTable = () => {
     btn.style.marginTop = '2rem';
 
     btn.addEventListener('click', () => {
-        if(!automata.hasStartNode()){
+        if (!automata.hasStartNode()) {
             createCard('No START node available!', 'red');
             return;
         }
         for (let i = 0; i < table.children.length; i++) {
             let pocket_elements = table.children[i].children;
             for (let j = 0; j < pocket_elements.length; j++) {
-                const input_text = pocket_elements[j].children[0].value; 
+                const input_text = pocket_elements[j].children[0].value;
                 const label = pocket_elements[j].children[1];
-                if(input_text){
+                if (input_text) {
                     let out = automata.process_string(input_text);
                     label.textContent = out ? "Accepted" : "Rejected";
                 }
@@ -138,9 +117,9 @@ let createTable = () => {
 };
 
 function removeInput() {
-    if (input) {
-        input.remove();
-        input = null;
+    if (hasInput()) {
+        getInput().remove();
+        setInput()
         setEditType();
     }
 }
@@ -149,11 +128,11 @@ function addInputToTable(table) {
     let inp;
     let lab;
     let pocket;
-    if(table.children.length == 0 || document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length-1].children.length % 4 == 0){
+    if (table.children.length == 0 || document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length - 1].children.length % 4 == 0) {
         pocket = document.createElement('div');
         pocket.className = 'pocket';
-    }else {
-        pocket = document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length-1];
+    } else {
+        pocket = document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length - 1];
     }
     let row = document.createElement('div');
 
@@ -172,8 +151,8 @@ function addInputToTable(table) {
     row.appendChild(lab);
     pocket.appendChild(row);
     pocket.style.marginRight = '2rem';
-    
-    if(table.children.length == 0 || document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length-1].children.length % 4 == 0){
+
+    if (table.children.length == 0 || document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length - 1].children.length % 4 == 0) {
         table.appendChild(pocket);
     }
 }
@@ -215,7 +194,7 @@ function getNodeFromPos(pos) {
     }
 }
 
-function startNodeExist() {
+function startNodeExists() {
     for (let i = 0; i < getAutomataNodes().length; i++) {
         const node = getAutomataNodes()[i];
         if (node.start) {
@@ -227,7 +206,7 @@ function startNodeExist() {
 
 function getStartNode() {
 
-    if (!startNodeExist()) {
+    if (!startNodeExists()) {
         return;
     }
 
@@ -241,23 +220,23 @@ function getStartNode() {
 }
 
 function setNode(new_node) {
-    node = new_node;
-    return node;
+    this.node = new_node;
+    return this.node;
 }
 
 function getNode() {
-    return node;
+    return this.node;
 }
 
 function hasNode() {
-    return node ? true : false;
+    return this.node ? true : false;
 }
 
 function addNode(node) {
     getAutomataNodes().push(node);
     setNode(node);
     automata.nodeIndex += 1;
-    return node;
+    return getNode();
 }
 
 function getAutomataNodes() {
@@ -268,16 +247,16 @@ function getAutomataNodes() {
 
 /*#####################-Modes-###############################*/
 function getCurrentMode() {
-    return curMode;
+    return this.curMode;
 }
 
 function setCurrentMode(mode) {
-    curMode = mode;
+    this.curMode = mode;
     return this.curMode;
 }
 
 function getParsedMode() {
-    let tmp = curMode.split('_');
+    let tmp = getCurrentMode().split('_');
     tmp = tmp.slice(1, tmp.length);
     let out = "";
     tmp.forEach((c) => {
@@ -295,12 +274,12 @@ function isEditingMode() {
 }
 
 function setEditType(type = '') {
-    edit = type;
-    return edit;
+    this.editType = type;
+    return this.editType;
 }
 
 function getEditType() {
-    return isEditingMode() ? edit : 'not editing';
+    return isEditingMode() ? this.editType : 'not editing';
 }
 
 function isEditType(type) {
@@ -313,6 +292,46 @@ function isEditType(type) {
 
 function deleteTransitionRules(transition, rule) {
 
+}
+
+/*###########################################################*/
+/*######################-Inputs-#############################*/
+
+let createInputBox = (text, size = 50, keyPressEvent, pos) => {
+    if (!getInput()) {
+        this.input = createInput(text);
+        getInput().elt.id = 'input';
+        getInput().elt.focus();
+        getInput().size(size, size * 2 / 5);
+        if (pos) {
+            getInput().position(pos.x, pos.y);
+        } else {
+            getInput().position(mouseX - size / 2, mouseY - size / 4);
+        }
+        document.getElementById("input").addEventListener("keydown", (event) => {
+            if (event.key == 'Escape') {
+                removeInput();
+            }
+        });
+        document.getElementById("input").addEventListener("keydown", keyPressEvent);
+    } else {
+        createCard('An Input already exists!');
+    }
+
+    return getInput();
+};
+
+function getInput() {
+    return this.input;
+}
+
+function hasInput() {
+    return getInput() ? true : false;
+}
+
+function setInput(input) {
+    this.input = input;
+    return getInput();
 }
 
 /*###########################################################*/

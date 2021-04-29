@@ -82,12 +82,12 @@ class Node {
 
                 let rule = EMPTY_RULE;
 
-                if (input.value()) {
-                    if (this.hasConnectionWithRule(input.value())) {
+                if (getInput().value()) {
+                    if (this.hasConnectionWithRule(getInput().value())) {
                         createCard('This node already has a transition with this rule!', 'red');
                         return;
                     } else {
-                        rule = input.value();
+                        rule = getInput().value();
                     }
                 }
                 connection.rule = rule;
@@ -124,5 +124,14 @@ class Node {
             }
         });
         return false;
+    }
+
+    setName(name){
+        this.name = name;
+        return this.name;
+    }
+
+    getName() {
+        return this.name;
     }
 }
