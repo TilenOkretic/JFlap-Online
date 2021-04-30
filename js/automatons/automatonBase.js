@@ -20,17 +20,26 @@ class AutomatonBase {
     }
 
     load_transitions(node) {
+
         node.connections.forEach(conn => {
 
             if (!this.transitions[conn.parent.name]) {
                 this.transitions[conn.parent.name] = [];
             }
-            this.transitions[conn.parent.name][conn.rule] = conn.next_state;
+            if (!this.transitions[conn.parent.name].rules) {
+                this.transitions[conn.parent.name].rules = [];
+            }
+            if (!this.transitions[conn.parent.name].rules[conn.rule]) {
+                this.transitions[conn.parent.name].rules[conn.rule] = [];
+            }
+            if (!this.hasRuleNextState(this.transitions[conn.parent.name], conn.rule, conn.next_state)) {
+                this.transitions[conn.parent.name].rules[conn.rule].push(conn.next_state);
+            }
         });
+
     }
 
-    process_string(str) {
-    }
+    process_string(str) {}
 
     getNodeFromName(name) {
 
@@ -47,46 +56,65 @@ class AutomatonBase {
 
     render() {
 
-        for (let i = 0; i < this.NODES.length; i++) {
-            let node = this.NODES[i];
-            if (this.transitions[node.name]) {
-                for (var key in this.transitions[node.name]) {
-                    if (key === 'length' || !this.transitions[node.name].hasOwnProperty(key)) continue;
 
-                    var other = this.transitions[node.name][key];
-
-                    let frules = "";
-                    let lst_tran = this.getTranstionsToState(this.transitions[node.name], other);
-
-                    for (let j = 0; j < lst_tran.length; j++) {
-                        const key = lst_tran[j];
-                        frules += key + ' ';
-                    }
-
-                    this.drawConnectionLine(frules, node, other);
-                }
-            }
-        }
-
-        for(let node of this.NODES){
+        for (let node of this.NODES) {
             node.show();
         }
 
+        for (let i = 0; i < this.NODES.length; i++) {
+            let node = this.NODES[i];
+            let transition = this.transitions[node.name];
+            if (transition) {
+                for (let rule in transition.rules) {
+                    let next_states = transition.rules[rule];
+                    for (let i = 0; i < next_states.length; i++) {
+                        let frule = "";
+                        const other = next_states[i];
+                        this.getRulesToState(transition, other).forEach(e =>{ frule+=e} );
+                        this.drawConnectionLine(frule, node, other);
+                    }
+
+                    
+
+
+                    // console.log(Object.keys(this.transitions[node.name].rules));
+                    // for (var key in this.transitions[node.name]) {
+                    //     if (key === 'length' || !this.transitions[node.name].hasOwnProperty(key)) continue;
+
+                    //     var other = this.transitions[node.name][key];
+
+                    //     let frules = "";
+                    //     let lst_tran = this.getTranstionsToState(this.transitions[node.name], other);
+
+                    //     for (let j = 0; j < lst_tran.length; j++) {
+                    //         const key = lst_tran[j];
+                    //         frules += key + ' ';
+                    //     }
+
+                    // this.drawConnectionLine(frules, node, other);
+                }
+            }
+
+
+        }
     }
 
-    getTranstionsToState(transition, state) {
+    getRulesToState(transition, state) {
 
         let out = [];
-
-        for (var key in transition) {
-            if (key === 'length' || !transition.hasOwnProperty(key)) continue;
-            let val = transition[key];
-            if (val.name === state.name) {
-                out.push(key);
+        // q0: [rules:]
+        for(let rule in transition.rules){
+            let next_states = transition.rules[rule];
+            for(let i = 0; i < next_states.length; i++){
+                if(next_states[i].name === state.name){
+                    if(!out.includes(rule))
+                    {
+                        out.push(rule);
+                    }
+                }
             }
         }
-
-
+        
 
         return out;
     }
@@ -137,7 +165,7 @@ class AutomatonBase {
         }
         if (node.name === other.name) {
 
-            if(this.isMouseOverText(node_vec.x, node_vec.y-node.p * 1.05)){
+            if (this.isMouseOverText(node_vec.x, node_vec.y - node.p * 1.05)) {
                 for (let i = 0; i < rule.split(',').length; i++) {
                     let one_rule = rule[i];
 
@@ -292,5 +320,33 @@ class AutomatonBase {
 
     hasStartNode() {
         return this.start ? true : false;
+    }
+
+    hasTransitionWithRule(rule) {
+        for (let key in this.transitions) {
+            console.log('rule: ', rule, 'arr:', this.transitions[key].rules.includes(rule));
+            if (this.transitions[key].rules.includes(rule)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // hasNextState(next_state) {
+    //     for (let key in this.transitions) {
+    //         for (let key2 in this.transitions[key].rules) {
+    //             if (this.transitions[key].rules[key2].includes(next_state)) {
+    //                 return true;
+    //             }
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    hasRuleNextState(transition, rule, next_state) {
+        if (transition.rules[rule].includes(next_state)) {
+            return true;
+        }
+        return false;
     }
 }

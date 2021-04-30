@@ -9,23 +9,12 @@ class NFA extends AutomatonBase {
         if (!this.transitions[this.start.name]) {
             return false;
         }
+        
+        let next     = this.transitions[this.start];
+        
+        let next_arr = next.rules[str[0]];
+        console.log(next_arr);
 
-        let next = this.transitions[this.start.name][str[0]];
-
-        for (let c = 1; c < str.length; c++) {
-            const char = str[c];
-
-            if (!next) {
-                return false;
-            }
-            if (!this.transitions[next.name]) {
-                return false;
-            }
-            next = this.transitions[next.name][char];
-        }
-
-        return next ? next.finish : false;
-
+        // for(let i = 0; i <)
     }
-
 }

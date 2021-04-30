@@ -1,13 +1,11 @@
-class NodeDFA extends NodeBase {
+class NodeNFA extends NodeBase {
 
     constructor(name) {
         super(name);
-        this.type = 'DFA';
+        this.type = 'NFA';
     }
 
-
     addConnection(next_state) {
-
         /* TODO: Rule parsing/cheking, maybe */
         let connection = {
             parent: this,
@@ -21,12 +19,7 @@ class NodeDFA extends NodeBase {
                 let rule = EMPTY_RULE;
 
                 if (getInput().value()) {
-                    if (this.hasConnectionWithRule(getInput().value())) {
-                        createCard('This node already has a transition with this rule!', 'red');
-                        return;
-                    } else {
-                        rule = getInput().value();
-                    }
+                    rule = getInput().value();
                 }
                 connection.rule = rule;
                 this.connections.push(connection);
@@ -37,8 +30,8 @@ class NodeDFA extends NodeBase {
         }).position((next_state.pos.x + this.pos.x) / 2, 0.5 * (next_state.pos.y + this.pos.y));
 
 
-
         return connection;
+
     }
 
     hasConnectionWithRule(rule) {
@@ -50,4 +43,5 @@ class NodeDFA extends NodeBase {
 
         return false;
     }
+
 }

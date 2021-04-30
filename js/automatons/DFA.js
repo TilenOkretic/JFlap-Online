@@ -5,24 +5,18 @@ class DFA extends AutomatonBase {
     }
 
     process_string(str) {
+
         if (!this.transitions[this.start.name]) {
             return false;
         }
-        
-        let next = this.transitions[this.start.name][str[0]];
-        
-        for (let c = 1; c < str.length; c++) {
-            const char = str[c];
-            if (!next) {
-                return false;
-            }
-            if (!this.transitions[next.name]) {
-                return false;
-            }
-            next = this.transitions[next.name][char];
+
+        let next = this.transitions[this.start.name].rules[str[0]][0];
+        for (let j = 1; j < str.length; j++) {
+            let rule = str[j];
+            next = this.transitions[next.name].rules[rule][0];
         }
 
         return next ? next.finish : false;
     }
-    
+
 }
