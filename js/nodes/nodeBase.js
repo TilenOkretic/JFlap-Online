@@ -32,8 +32,8 @@ class NodeBase {
     show() {
 
         // fill(133, 151, 49); this is the old green
-        fill(255,255,47);
-        strokeWeight(4);
+        fill(218,165,32);
+        strokeWeight(3);
         ellipse(this.pos.x, this.pos.y, this.p, this.p);
 
 
