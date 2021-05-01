@@ -55,12 +55,6 @@ class AutomatonBase {
     }
 
     render() {
-
-
-        for (let node of this.NODES) {
-            node.show();
-        }
-
         for (let i = 0; i < this.NODES.length; i++) {
             let node = this.NODES[i];
             let transition = this.transitions[node.name];
@@ -70,32 +64,16 @@ class AutomatonBase {
                     for (let i = 0; i < next_states.length; i++) {
                         let frule = "";
                         const other = next_states[i];
-                        this.getRulesToState(transition, other).forEach(e =>{ frule+=e} );
+                        this.getRulesToState(transition, other).forEach(e => {
+                            frule += e
+                        });
                         this.drawConnectionLine(frule, node, other);
                     }
-
-                    
-
-
-                    // console.log(Object.keys(this.transitions[node.name].rules));
-                    // for (var key in this.transitions[node.name]) {
-                    //     if (key === 'length' || !this.transitions[node.name].hasOwnProperty(key)) continue;
-
-                    //     var other = this.transitions[node.name][key];
-
-                    //     let frules = "";
-                    //     let lst_tran = this.getTranstionsToState(this.transitions[node.name], other);
-
-                    //     for (let j = 0; j < lst_tran.length; j++) {
-                    //         const key = lst_tran[j];
-                    //         frules += key + ' ';
-                    //     }
-
-                    // this.drawConnectionLine(frules, node, other);
                 }
             }
-
-
+        }
+        for (let node of this.NODES) {
+            node.show();
         }
     }
 
@@ -103,18 +81,17 @@ class AutomatonBase {
 
         let out = [];
         // q0: [rules:]
-        for(let rule in transition.rules){
+        for (let rule in transition.rules) {
             let next_states = transition.rules[rule];
-            for(let i = 0; i < next_states.length; i++){
-                if(next_states[i].name === state.name){
-                    if(!out.includes(rule))
-                    {
+            for (let i = 0; i < next_states.length; i++) {
+                if (next_states[i].name === state.name) {
+                    if (!out.includes(rule)) {
                         out.push(rule);
                     }
                 }
             }
         }
-        
+
 
         return out;
     }

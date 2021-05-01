@@ -7,12 +7,10 @@ class WorkspaceBase {
 
         this.nodeType = nodeType;
 
-        if(!automata)
-        {
-            createCard('Automata must be defined!','red');
+        if (!automata) {
+            createCard('Automata must be defined!', 'red');
             return;
-        }else
-        {
+        } else {
             this.automata = automata;
         }
     }
@@ -149,6 +147,10 @@ class WorkspaceBase {
     }
     getAutomataNodes() {
         return this.automata.NODES;
-    }   
+    }
+
+
+    reset() {
+    }
 
 }

@@ -1,4 +1,3 @@
-
 let workspace;
 
 function setup() {
@@ -45,28 +44,22 @@ function setup() {
         document.querySelector('.preload').style.display = 'none';
         document.querySelector('.app').style.display = '';
     });
-    
+
     document.querySelector('#NFA').addEventListener('click', () => {
         workspace = new NFAWorkspace();
         document.querySelector('.preload').style.display = 'none';
         document.querySelector('.app').style.display = '';
     });
 
-    
+
     document.querySelector('#e-NFA').addEventListener('click', () => {
         alert('Not implemented yet');
     });
 
     document.getElementById('LA').addEventListener('click', () => {
-        workspace = new DFAWorkspace();
-
-        let holder = document.querySelector('.bottom_holder');
-        if (holder) {
-            holder.remove();
-            holder = null;
+        if (workspace) {
+            workspace.reset();
         }
-
-        createCard('Automata Workspace Reset', 'orange');
     }, true);
 }
 
