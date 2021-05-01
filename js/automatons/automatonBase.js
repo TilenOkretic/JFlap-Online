@@ -238,12 +238,11 @@ class AutomatonBase {
             if (this.isMouseOverText((node_vec.x + other_vec.x) / 2, (node_vec.y + other_vec.y) / 2)) {
                 for (let i = 0; i < rule.split(',').length; i++) {
                     let one_rule = rule[i];
-
-                    for (let key in this.transitions[node.name]) {
-                        if (key === 'length' || !this.transitions[node.name].hasOwnProperty(key)) continue;
-                        if (key === one_rule) {
+                    console.log(one_rule);
+                    for (let rule in this.transitions[node.name].rules) {
+                        if (rule === one_rule) {
                             node.removeConnectionWithRule(one_rule);
-                            delete this.transitions[node.name][key];
+                            delete this.transitions[node.name].rules[rule];
                         }
                     }
                 }
@@ -254,8 +253,8 @@ class AutomatonBase {
     }
 
     isMouseOverText(x, y) {
-        if (mouseX > x - 15 && mouseX < x + 15) {
-            if (mouseY > y - 15 && mouseY < y + 15) {
+        if (mouseX > (x - 15) && mouseX < (x + 15)) {
+            if (mouseY > (y - 15) && mouseY < (y + 15)) {
                 if (mouseIsPressed && mouseButton === 'left') {
                     return isCurrentMode(MODE_DELETE_NODES);
                 }
@@ -275,12 +274,11 @@ class AutomatonBase {
                 this.NODES.splice(i, 1);
 
                 for (let transition in this.transitions) {
-                    for(let rule in this.transitions[transition].rules){
-                        for(let next in this.transitions[transition].rules[rule]){
-                            let parent_node = this.transitions[transition].rules[rule][next]; 
-                            if(node.name === parent_node.name){
-                                this.transitions[transition].rules.splice(rule, 1);
-                                console.log(this.transitions[transition].rules);
+                    for (let rule in this.transitions[transition].rules) {
+                        for (let next in this.transitions[transition].rules[rule]) {
+                            let parent_node = this.transitions[transition].rules[rule][next];
+                            if (node.name === parent_node.name) {
+                                delete this.transitions[transition].rules[rule];
                             }
                         }
                     }
