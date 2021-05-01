@@ -18,7 +18,7 @@ class NodeDFA extends NodeBase {
         createInputBox('', 50, (event) => {
             if (event.key === 'Enter') {
 
-                let rule = EMPTY_RULE;
+                let rule;
 
                 if (getInput().value()) {
                     if (this.hasConnectionWithRule(getInput().value())) {
@@ -27,6 +27,11 @@ class NodeDFA extends NodeBase {
                     } else {
                         rule = getInput().value();
                     }
+                }
+
+                if(!rule){
+                    createCard('You must define a rule for transition!', 'red');
+                    return;
                 }
                 connection.rule = rule;
                 this.connections.push(connection);

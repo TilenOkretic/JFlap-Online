@@ -301,7 +301,6 @@ class AutomatonBase {
 
     hasTransitionWithRule(rule) {
         for (let key in this.transitions) {
-            console.log('rule: ', rule, 'arr:', this.transitions[key].rules.includes(rule));
             if (this.transitions[key].rules.includes(rule)) {
                 return true;
             }
