@@ -274,21 +274,15 @@ class AutomatonBase {
             if (this.NODES[i].name === node.name) {
                 this.NODES.splice(i, 1);
 
-                for (let key in this.transitions) {
-                    if (key === 'length' || !this.transitions.hasOwnProperty(key)) continue;
-                    let val = this.transitions[key];
-                    for (let key2 in val) {
-                        if (key2 === 'length' || !val.hasOwnProperty(key2)) continue;
-                        let val2 = val[key2];
-                        if (val2.name == node.name) {
-                            this.getNodeFromName(key).removeConnectionWithRule(key2);
-                            delete this.transitions[key][key2]
+                for (let transition in this.transitions) {
+                    for(let rule in this.transitions[transition].rules){
+                        for(let next in this.transitions[transition].rules[rule]){
+                            let parent_node = this.transitions[transition].rules[rule][next]; 
+                            if(node.name === parent_node.name){
+                                this.transitions[transition].rules.splice(rule, 1);
+                                console.log(this.transitions[transition].rules);
+                            }
                         }
-
-                    }
-
-                    if (key == node.name) {
-                        delete this.transitions[key]
                     }
                 }
             }

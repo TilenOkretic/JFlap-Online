@@ -137,10 +137,11 @@ function addInputToTable(table) {
     let row = document.createElement('div');
 
     inp = document.createElement('input');
-    inp.addEventListener('focus', () => {
+    inp.addEventListener('click', () => {
         if (!inp.className.includes('extended')) {
             addInputToTable(table);
             inp.className += 'extended';
+            inp.focus();
         }
     });
     lab = document.createElement('lable');

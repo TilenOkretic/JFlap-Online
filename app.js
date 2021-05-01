@@ -23,7 +23,7 @@ function setup() {
                     document.querySelector('.workspace_canvas').style.overflow = 'scroll';
                     document.querySelector('.workspace_canvas').style.overflowX = 'hidden';
                 }
-            } else {
+            } else if(e.value !== MODE_EDIT_NODES){
                 resizeCanvas(windowWidth, windowHeight);
                 let holder = document.querySelector('.bottom_holder');
                 if (holder) {
@@ -49,11 +49,6 @@ function setup() {
         workspace = new NFAWorkspace();
         document.querySelector('.preload').style.display = 'none';
         document.querySelector('.app').style.display = '';
-    });
-
-
-    document.querySelector('#e-NFA').addEventListener('click', () => {
-        alert('Not implemented yet');
     });
 
     document.getElementById('LA').addEventListener('click', () => {

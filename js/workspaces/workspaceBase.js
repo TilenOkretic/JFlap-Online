@@ -38,7 +38,7 @@ class WorkspaceBase {
             }));
 
             if (hasNode()) {
-                automata.removeNode(getNode());
+                this.automata.removeNode(getNode());
                 setNode();
             }
         }
