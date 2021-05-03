@@ -19,7 +19,7 @@ function setup() {
                     document.querySelector('.workspace_canvas').style.overflow = 'scroll';
                     document.querySelector('.workspace_canvas').style.overflowX = 'hidden';
                 } else {
-                    createTable();
+                    createHolder();
                     document.querySelector('.workspace_canvas').style.overflow = 'scroll';
                     document.querySelector('.workspace_canvas').style.overflowX = 'hidden';
                 }

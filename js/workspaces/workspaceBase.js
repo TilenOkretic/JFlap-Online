@@ -145,12 +145,44 @@ class WorkspaceBase {
     getAutomata() {
         return this.automata;
     }
+
+    getTransitions() {
+        return this.getAutomata().transitions;
+    }
+
+    getTransition(name) {
+        return this.getAutomata().transitions[name];
+    }
+
+    getTransitionRules(name) {
+        return this.getAutomata().transitions[name].rules;
+    }
+
+    getResultOfDeltaTransition(name, rule) {
+        return this.getAutomata().transitions[name].rules[rule];
+    }
+
     getAutomataNodes() {
         return this.automata.NODES;
     }
 
-
-    reset() {
+    
+    getDeltaTransitions() {
+        let out_arr = [];
+        const DELTA = '𝛿';
+        for (let transition_start in this.getTransitions()) {
+            if (!this.getTransitions().hasOwnProperty(transition_start)) return;
+            for (let rule in this.getTransitionRules(transition_start)) {
+                for (let endpoint in this.getResultOfDeltaTransition(transition_start, rule)) {
+                    let out = this.getResultOfDeltaTransition(transition_start, rule)[endpoint].name;
+                    let string = `${DELTA}(${transition_start}, ${rule}) = ${out}`;
+                    out_arr.push(string);
+                }
+            }
+        }
+        console.log(out_arr);
+        return out_arr;
     }
+    reset() {}
 
 }

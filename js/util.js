@@ -71,17 +71,24 @@ let createWrapper = (node, automata) => {
 
 };
 
-let createTable = () => {
+let createHolder = () => {
     let workspace_div = document.querySelector('.workspace');
+
     let holder = document.createElement('div');
     holder.className = 'bottom_holder';
-
+    
+    let tab = document.createElement('div');
+    tab.className = 'tab';
 
     let pane = document.createElement('div');
     pane.className = 'pane';
 
     let table = document.createElement('div');
     table.className = 'input_table';
+
+    let btnHolder = document.createElement('div');
+    btnHolder.className = 'btnHolder';
+    btnHolder.style.bottom = '0';
 
     addInputToTable(table);
 
@@ -110,8 +117,19 @@ let createTable = () => {
         }
     });
 
-    holder.appendChild(pane);
-    holder.appendChild(btn);
+    tab.appendChild(btnHolder);
+
+    tab.appendChild(pane);
+    tab.appendChild(btn);
+
+    workspace.getDeltaTransitions().forEach(e => {
+        let p = document.createElement('p');
+        p.textContent = e;
+        p.style.color = 'white';
+        holder.appendChild(p);
+    });
+
+    holder.appendChild(tab);
 
     workspace_div.appendChild(holder);
 };
