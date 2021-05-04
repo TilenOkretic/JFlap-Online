@@ -86,10 +86,6 @@ let createHolder = () => {
     let table = document.createElement('div');
     table.className = 'input_table';
 
-    let btnHolder = document.createElement('div');
-    btnHolder.className = 'btnHolder';
-    btnHolder.style.bottom = '0';
-
     addInputToTable(table);
 
     pane.appendChild(table);
@@ -117,8 +113,6 @@ let createHolder = () => {
         }
     });
 
-    tab.appendChild(btnHolder);
-
     tab.appendChild(pane);
     tab.appendChild(btn);
 
@@ -143,6 +137,11 @@ function removeInput() {
 }
 
 function addInputToTable(table) {
+
+    if(document.getElementsByClassName('pocket').length >= 3 && document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length - 1].childElementCount >= 4){
+        return;
+    } 
+
     let inp;
     let lab;
     let pocket;

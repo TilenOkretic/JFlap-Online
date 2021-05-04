@@ -164,15 +164,12 @@ select {
 
 .bottom_holder {
     height: 50%;
+    width: 75%;
+    margin-left: 12.5%;
     background-color: rgb(30,30, 30);
     padding: 1rem;
 
     border: 5px solid rgb(10,10,10);
-    border-bottom: none;
-    border-radius: 30px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
     box-shadow: 10px 10px 20px black;
 }
 
