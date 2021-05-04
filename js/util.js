@@ -80,47 +80,29 @@ let createHolder = () => {
     let tab = document.createElement('div');
     tab.className = 'tab';
 
+    let bh = document.createElement('div');
+    bh.className = 'bh';
+
     let pane = document.createElement('div');
     pane.className = 'pane';
 
-    let table = document.createElement('div');
-    table.className = 'input_table';
-
-    addInputToTable(table);
-
-    pane.appendChild(table);
-
-    let btn = document.createElement('button');
-    btn.textContent = 'Run';
-    btn.style.width = '120px';
-    btn.style.marginTop = '2rem';
-
-    btn.addEventListener('click', () => {
-        if (!getAutomata().hasStartNode()) {
-            createCard('No START node available!', 'red');
-            return;
-        }
-        for (let i = 0; i < table.children.length; i++) {
-            let pocket_elements = table.children[i].children;
-            for (let j = 0; j < pocket_elements.length; j++) {
-                const input_text = pocket_elements[j].children[0].value;
-                const label = pocket_elements[j].children[1];
-                if (input_text) {
-                    let out = getAutomata().process_string(input_text);
-                    label.textContent = out ? "Accepted" : "Rejected";
-                }
-            }
-        }
-    });
-
+    tab.appendChild(bh);
     tab.appendChild(pane);
-    tab.appendChild(btn);
 
-    workspace.getDeltaTransitions().forEach(e => {
-        let p = document.createElement('p');
-        p.textContent = e;
-        p.style.color = 'white';
-        holder.appendChild(p);
+    let tabs = [];
+    tabs.push(new RunInputsTab());
+    tabs.push(new DeltaInfoTab()); 
+    
+    tabs.forEach(t => {
+        let btn = document.createElement('button');
+        btn.textContent = t.name;
+        btn.addEventListener('click', () => {
+            while(pane.hasChildNodes()){
+                pane.children.forEach(c => pane.removeChild(c));
+            }
+            t.load(pane);
+        });
+        bh.appendChild(btn);
     });
 
     holder.appendChild(tab);

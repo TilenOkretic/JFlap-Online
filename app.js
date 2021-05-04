@@ -5,6 +5,10 @@ function setup() {
         e.addEventListener('click', () => {
             setCurrentMode(e.value);
 
+            if (e.value == 'exit') {
+                window.open('/', '_self');
+            }
+
             if (e.value === MODE_DELETE_NODES) {
                 cursor(`${window.location.href}assets/cancel.png`);
             } else {
@@ -15,7 +19,7 @@ function setup() {
                 resizeCanvas(windowWidth, windowHeight);
                 let holder = document.querySelector('.bottom_holder');
                 if (holder) {
-                    holder.style.display = '';
+                    holder.remove();
                     document.querySelector('.workspace_canvas').style.overflow = 'scroll';
                     document.querySelector('.workspace_canvas').style.overflowX = 'hidden';
                 } else {
@@ -23,13 +27,13 @@ function setup() {
                     document.querySelector('.workspace_canvas').style.overflow = 'scroll';
                     document.querySelector('.workspace_canvas').style.overflowX = 'hidden';
                 }
-            } else if(e.value !== MODE_EDIT_NODES){
+            } else if (e.value !== MODE_EDIT_NODES) {
                 resizeCanvas(windowWidth, windowHeight);
                 let holder = document.querySelector('.bottom_holder');
                 if (holder) {
                     document.querySelector('.workspace_canvas').style.overflow = 'hidden';
                     document.querySelector('.workspace_canvas').style.border = 'none';
-                    holder.style.display = 'none';
+                    holder.remove();
                 }
             }
 

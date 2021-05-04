@@ -6,10 +6,9 @@ class DFA extends AutomatonBase {
 
     process_string(str) {
 
-        if (!this.transitions[this.start.name]) {
+        if (!this.transitions[this.start.name] || !this.transitions[this.start.name].rules[str[0]]) {
             return false;
         }
-
         let next = this.transitions[this.start.name].rules[str[0]][0];
         for (let j = 1; j < str.length; j++) {
             let rule = str[j];

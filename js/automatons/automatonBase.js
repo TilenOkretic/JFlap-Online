@@ -10,7 +10,12 @@ class AutomatonBase {
         return this.nodeIndex;
     }
 
-    load_automata() {
+    load_automata(flag) {
+
+        if(flag){
+            this.transitions = [];
+        }
+
         this.NODES.forEach(element => {
             if (element.start) {
                 this.start = element;

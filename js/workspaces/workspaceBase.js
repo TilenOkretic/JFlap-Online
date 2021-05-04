@@ -133,9 +133,13 @@ class WorkspaceBase {
 
                 createInputBox(getNode().getName(), 50, (event) => {
                     if (event.key === 'Enter') {
+                        if (document.getElementsByClassName('bottom_holder')[0]) {
+                            document.getElementsByClassName('bottom_holder')[0].remove();
+                        }
                         getNode().setName(getInput().value());
                         removeInput();
-                        automata.load_automata();
+                        this.getAutomata().load_automata(true);
+
                     }
                 });
             }
@@ -166,7 +170,7 @@ class WorkspaceBase {
         return this.automata.NODES;
     }
 
-    
+
     getDeltaTransitions() {
         let out_arr = [];
         const DELTA = '𝛿';
@@ -175,7 +179,7 @@ class WorkspaceBase {
             for (let rule in this.getTransitionRules(transition_start)) {
                 for (let endpoint in this.getResultOfDeltaTransition(transition_start, rule)) {
                     let out = this.getResultOfDeltaTransition(transition_start, rule)[endpoint].name;
-                    let string = `${DELTA}(${transition_start}, ${rule}) = ${out}`;
+                    let string = `${DELTA} ( ${transition_start}, ${rule} ) = ${out}`;
                     out_arr.push(string);
                 }
             }
