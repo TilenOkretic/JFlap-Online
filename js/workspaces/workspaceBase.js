@@ -170,6 +170,25 @@ class WorkspaceBase {
         return this.automata.NODES;
     }
 
+    getAutomataNodeNames() {
+        let out = [];
+        this.getAutomataNodes().forEach(n => {
+            out.push(n.name);
+        });
+        return out;
+    }
+
+    getAutomataRules() {
+        let out = [];
+        for (let tr in this.getAutomata().transitions) {
+            for (let rule in this.getAutomata().transitions[tr].rules) {
+                if (!out.includes(rule)) {
+                    out.push(rule);
+                }
+            }
+        }
+        return out;
+    }
 
     getDeltaTransitions() {
         let out_arr = [];
@@ -187,6 +206,35 @@ class WorkspaceBase {
         console.log(out_arr);
         return out_arr;
     }
+
+    addDeltaTransition(in_node, rule, out_node) {
+
+        if (!hasNodeWithName(in_node)) {
+            createCard(`Node ${in_node} does not exist!`, 'red');
+            return false;
+        }
+        if (!hasNodeWithName(out_node)) {
+            createCard(`Node ${out_node} does not exist!`, 'red');
+            return false;
+        }
+        this.getAutomata().addTransition(in_node, rule, out_node);
+        return true;
+    }
+
+    getStateFromRule(in_state, rule) {
+        for (let transition_start in this.getTransitions()) {
+            if (!this.getTransitions().hasOwnProperty(transition_start)) return;
+            for (let trule in this.getTransitionRules(transition_start)) {
+                for (let endpoint in this.getResultOfDeltaTransition(transition_start, rule)) {
+                    if (transition_start === in_state && trule === rule) {
+                        return this.getResultOfDeltaTransition(transition_start, rule)[endpoint].name;
+                    }
+                }
+            }
+        }
+        return "Φ";
+    }
+
     reset() {}
 
 }

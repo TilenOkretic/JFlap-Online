@@ -1,5 +1,5 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -19,7 +19,7 @@
 .title {
     margin: 2rem;
     color: white;
-    background-color: rgb(20,20,20);
+    background-color: rgb(20, 20, 20);
     padding: 2rem;
     font-size: 3rem;
     border-radius: 50px;
@@ -27,7 +27,7 @@
 
 .btns {
 
-    background: rgb(20,20,20);
+    background: rgb(20, 20, 20);
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -35,7 +35,7 @@
 }
 
 .btns>* {
-    background:none;
+    background: none;
     border: none;
     color: white;
     border: 2px solid rgb(133, 151, 49);
@@ -51,7 +51,8 @@
     cursor: pointer;
 }
 
-.title, h1 {
+.title,
+h1 {
     text-shadow: -6px 4px 2px rgb(133, 151, 49);
 }
 
@@ -148,17 +149,17 @@ select {
     /* transform: translate(-300px,0); */
 
     border-radius: 20px;
-    
+
     font-size: 1.4rem;
     text-transform: uppercase;
     color: black;
-    
+
     padding: 1rem;
     text-align: center;
     justify-content: center;
     align-items: center;
     box-shadow: 3px 5px 30px black;
-    
+
     transition: 800ms;
 }
 
@@ -166,16 +167,17 @@ select {
     height: 50%;
     width: 75%;
     margin-left: 12.5%;
-    background-color: rgb(30,30, 30);
+    background-color: rgb(30, 30, 30);
     padding: 1rem;
 
-    border: 5px solid rgb(10,10,10);
+    border: 5px solid rgb(10, 10, 10);
+    border-bottom: none;
     box-shadow: 10px 10px 20px black;
 }
 
 .workspace_canvas {
     overflow-x: hidden;
-    
+
 }
 
 .pane {
@@ -190,7 +192,7 @@ select {
 .bh {
     padding: 10px;
     margin-bottom: 0.5rem;
-    border-bottom: 2px solid rgb(10,10,10);
+    border-bottom: 2px solid rgb(10, 10, 10);
 }
 
 .bh button {
@@ -198,24 +200,57 @@ select {
     text-align: center;
     padding: 0.5rem;
     margin-right: 20px;
-    background:none;
+    background: none;
     border: none;
     color: white;
 
     text-shadow: 2px 2px black;
 
     text-transform: capitalize;
-    border-top: 5px solid rgb(60,60,60);
-    border-left: 5px solid rgb(60,60,60);
-    border-bottom: 5px solid rgb(10,10,10);
-    border-right: 5px solid rgb(10,10,10);
+    border-top: 5px solid rgb(60, 60, 60);
+    border-left: 5px solid rgb(60, 60, 60);
+    border-bottom: 5px solid rgb(10, 10, 10);
+    border-right: 5px solid rgb(10, 10, 10);
 }
 
 .bh button:active {
 
-    border-bottom: 5px solid rgb(60,60,60);
-    border-right: 5px solid rgb(60,60,60);
-    border-top: 5px solid rgb(10,10,10);
-    border-left: 5px solid rgb(10,10,10);
+    border-bottom: 5px solid rgb(60, 60, 60);
+    border-right: 5px solid rgb(60, 60, 60);
+    border-top: 5px solid rgb(10, 10, 10);
+    border-left: 5px solid rgb(10, 10, 10);
+
+}
+
+.at_button {
+    width: 25px;
+    font-size: 14px;
+    background: rgb(20, 20, 20);
+    color: white;
+    border: none;
+    padding: 2px;
+}
+
+.addTransitionButton {
+    margin-top: 5px;
+    padding: 5px;
+    margin-left: 5px;
+    background: rgb(20, 20, 20);
+    
+    border-top: 2px solid rgb(60, 60, 60);
+    border-left: 2px solid rgb(60, 60, 60);
+    border-right: 2px solid rgb(10, 10, 10);
+    border-bottom: 2px solid rgb(10, 10, 10);
+
+    border-radius: 30px;
+    color: white;
+    padding: 8px;
+}
+
+.addTransitionButton:active {
+    border-bottom: 2px solid rgb(60, 60, 60);
+    border-right: 2px solid rgb(60, 60, 60);
+    border-left: 2px solid rgb(10, 10, 10);
+    border-top: 2px solid rgb(10, 10, 10);
 
 }

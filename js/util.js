@@ -76,7 +76,7 @@ let createHolder = () => {
 
     let holder = document.createElement('div');
     holder.className = 'bottom_holder';
-    
+
     let tab = document.createElement('div');
     tab.className = 'tab';
 
@@ -91,13 +91,18 @@ let createHolder = () => {
 
     let tabs = [];
     tabs.push(new RunInputsTab());
-    tabs.push(new DeltaInfoTab()); 
-    
+    tabs.push(new DeltaTransitionFunctionsTab());
+    tabs.push(new DeltaTransitionsTableTab());
+
     tabs.forEach(t => {
         let btn = document.createElement('button');
         btn.textContent = t.name;
         btn.addEventListener('click', () => {
-            while(pane.hasChildNodes()){
+            let holder = document.querySelector('.bottom_holder');
+            if (holder) {
+                holder.style.overflow = 'hidden';
+            }
+            while (pane.hasChildNodes()) {
                 pane.children.forEach(c => pane.removeChild(c));
             }
             t.load(pane);
@@ -120,9 +125,9 @@ function removeInput() {
 
 function addInputToTable(table) {
 
-    if(document.getElementsByClassName('pocket').length >= 3 && document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length - 1].childElementCount >= 4){
+    if (document.getElementsByClassName('pocket').length >= 3 && document.getElementsByClassName('pocket')[document.getElementsByClassName('pocket').length - 1].childElementCount >= 4) {
         return;
-    } 
+    }
 
     let inp;
     let lab;
@@ -228,6 +233,17 @@ function getNode() {
 function hasNode() {
     return this.node ? true : false;
 }
+
+function hasNodeWithName(node_name) {
+    for (let i = 0; i < getAutomataNodes().length; i++) {
+        let n = getAutomataNodes()[i];
+        if (n.name === node_name) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 function addNode(node) {
     getAutomataNodes().push(node);

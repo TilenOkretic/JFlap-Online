@@ -6,13 +6,9 @@ class AutomatonBase {
         this.nodeIndex = 0;
     }
 
-    getNodeIndex() {
-        return this.nodeIndex;
-    }
-
     load_automata(flag) {
 
-        if(flag){
+        if (flag) {
             this.transitions = [];
         }
 
@@ -27,21 +23,23 @@ class AutomatonBase {
     load_transitions(node) {
 
         node.connections.forEach(conn => {
-
-            if (!this.transitions[conn.parent.name]) {
-                this.transitions[conn.parent.name] = [];
-            }
-            if (!this.transitions[conn.parent.name].rules) {
-                this.transitions[conn.parent.name].rules = [];
-            }
-            if (!this.transitions[conn.parent.name].rules[conn.rule]) {
-                this.transitions[conn.parent.name].rules[conn.rule] = [];
-            }
-            if (!this.hasRuleNextState(this.transitions[conn.parent.name], conn.rule, conn.next_state)) {
-                this.transitions[conn.parent.name].rules[conn.rule].push(conn.next_state);
-            }
+            this.addTransition(conn.parent.name, conn.rule, conn.next_state.name);
         });
+    }
 
+    addTransition(in_node, rule, out_node) {
+        if (!this.transitions[in_node]) {
+            this.transitions[in_node] = [];
+        }
+        if (!this.transitions[in_node].rules) {
+            this.transitions[in_node].rules = [];
+        }
+        if (!this.transitions[in_node].rules[rule]) {
+            this.transitions[in_node].rules[rule] = [];
+        }
+        if (!this.hasRuleNextState(this.transitions[in_node], rule, this.getNodeFromName(out_node))) {
+            this.transitions[in_node].rules[rule].push(this.getNodeFromName(out_node));
+        }
     }
 
     process_string(str) {}
@@ -57,6 +55,10 @@ class AutomatonBase {
 
         return;
 
+    }
+
+    getNodeIndex() {
+        return this.nodeIndex;
     }
 
     render() {
@@ -85,7 +87,6 @@ class AutomatonBase {
     getRulesToState(transition, state) {
 
         let out = [];
-        // q0: [rules:]
         for (let rule in transition.rules) {
             let next_states = transition.rules[rule];
             for (let i = 0; i < next_states.length; i++) {
@@ -278,6 +279,8 @@ class AutomatonBase {
             if (this.NODES[i].name === node.name) {
                 this.NODES.splice(i, 1);
 
+                delete this.transitions[node.name];
+
                 for (let transition in this.transitions) {
                     for (let rule in this.transitions[transition].rules) {
                         for (let next in this.transitions[transition].rules[rule]) {
@@ -288,21 +291,23 @@ class AutomatonBase {
                         }
                     }
                 }
+
+                for (let j = 0; j < getAutomataNodes().length; j++) {
+                    for(let k = 0; k < getAutomataNodes()[j].connections.length; k++){
+                        let conn = getAutomataNodes()[j].connections[k];
+                        if(conn.next_state.name === node.name){
+                            getAutomataNodes()[j].connections.splice(k, 1);
+                            console.log(getAutomataNodes());
+                        }
+                    }
+                }
+
             }
         }
     }
 
     hasStartNode() {
         return this.start ? true : false;
-    }
-
-    hasTransitionWithRule(rule) {
-        for (let key in this.transitions) {
-            if (this.transitions[key].rules.includes(rule)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     // hasNextState(next_state) {
