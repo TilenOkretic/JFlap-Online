@@ -244,7 +244,6 @@ class AutomatonBase {
             if (this.isMouseOverText((node_vec.x + other_vec.x) / 2, (node_vec.y + other_vec.y) / 2)) {
                 for (let i = 0; i < rule.split(',').length; i++) {
                     let one_rule = rule[i];
-                    console.log(one_rule);
                     for (let rule in this.transitions[node.name].rules) {
                         if (rule === one_rule) {
                             node.removeConnectionWithRule(one_rule);
@@ -297,7 +296,6 @@ class AutomatonBase {
                         let conn = getAutomataNodes()[j].connections[k];
                         if(conn.next_state.name === node.name){
                             getAutomataNodes()[j].connections.splice(k, 1);
-                            console.log(getAutomataNodes());
                         }
                     }
                 }

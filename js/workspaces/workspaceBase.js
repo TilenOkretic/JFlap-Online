@@ -1,6 +1,7 @@
 class WorkspaceBase {
 
-    constructor(automata, nodeType) {
+    constructor(name, automata, nodeType) {
+        this.name = name;
         let canvas = createCanvas(windowWidth, windowHeight);
         canvas.parent(document.querySelector('.workspace_canvas'));
         textFont('Play');
@@ -13,6 +14,8 @@ class WorkspaceBase {
         } else {
             this.automata = automata;
         }
+
+        document.getElementById('sidebar-label').textContent = name;
     }
 
     render() {
@@ -203,7 +206,6 @@ class WorkspaceBase {
                 }
             }
         }
-        console.log(out_arr);
         return out_arr;
     }
 

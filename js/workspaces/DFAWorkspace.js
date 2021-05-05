@@ -1,8 +1,7 @@
 class DFAWorkspace extends WorkspaceBase {
 
     constructor() {
-        super(new DFA(), NodeDFA);
-        this.name = 'DFA';
+        super('DFA', new DFA(), NodeDFA);
     }
 
 

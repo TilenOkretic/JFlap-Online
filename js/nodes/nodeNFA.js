@@ -42,7 +42,7 @@ class NodeNFA extends NodeBase {
             next_state,
             rule: EMPTY_RULE
         };
-        if(rule){
+        if (rule) {
             connection.rule = rule;
         }
         this.connections.push(connection);
@@ -51,19 +51,14 @@ class NodeNFA extends NodeBase {
         return connection ? true : false;
     }
 
-
-    return connection;
-
-}
-
-hasConnectionWithRule(rule) {
-    for (let i = 0; i < this.connections.length; i++) {
-        if (this.connections[i].rule === rule) {
-            return true;
+    hasConnectionWithRule(rule) {
+        for (let i = 0; i < this.connections.length; i++) {
+            if (this.connections[i].rule === rule) {
+                return true;
+            }
         }
-    }
 
-    return false;
-}
+        return false;
+    }
 
 }
