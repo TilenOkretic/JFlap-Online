@@ -2,6 +2,7 @@ class DFA extends AutomatonBase {
 
     constructor() {
         super();
+        this.name = 'DFA';
     }
 
     process_string(str) {

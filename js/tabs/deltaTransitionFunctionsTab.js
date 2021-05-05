@@ -6,9 +6,14 @@ class DeltaTransitionFunctionsTab {
 
     load(pane) {
 
+        while (pane.hasChildNodes()) {
+            pane.children.forEach(c => {
+                pane.removeChild(c);
+            });
+        }
 
         let bholder = document.querySelector('.bottom_holder');
-        if(bholder){
+        if (bholder) {
             bholder.style.overflow = 'scroll';
             bholder.style.overflowX = 'hidden';
         }
@@ -19,7 +24,6 @@ class DeltaTransitionFunctionsTab {
 
         pane.appendChild(h);
 
-        this.addTransitionsToPane(pane);
 
         let holder = document.createElement('div');
 
@@ -38,7 +42,7 @@ class DeltaTransitionFunctionsTab {
             let out_node = document.getElementById('node_out').value;
 
             if (workspace.name == 'DFA') {
-                if(getAutomataNodes().length > 0 && workspace.getAutomata().getNodeFromName(in_node).hasConnectionWithRule(rule)){
+                if (getAutomataNodes().length > 0 && workspace.getAutomata().getNodeFromName(in_node).hasConnectionWithRule(rule)) {
                     createCard('Transition with this rule already exists!', 'red');
                     return;
                 }
@@ -48,12 +52,13 @@ class DeltaTransitionFunctionsTab {
                 document.getElementById('node_in').value = '';
                 document.getElementById('trule').value = '';
                 document.getElementById('node_out').value = '';
-                this.addTransitionsToPane(pane);
+                this.load(pane);
             }
         });
 
         holder.appendChild(p0);
         holder.appendChild(btn);
+        this.addTransitionsToPane(pane);
 
         holder.style.display = 'flex';
         holder.style.flexDirection = 'row';
@@ -65,10 +70,10 @@ class DeltaTransitionFunctionsTab {
     addTransitionsToPane(pane) {
 
         pane.children.forEach(c => {
-            if(c.id == 'dtp'){
+            if (c.id == 'dtp') {
                 c.remove();
             }
-        }); 
+        });
 
         workspace.getDeltaTransitions().forEach(element => {
             let p = document.createElement('p');

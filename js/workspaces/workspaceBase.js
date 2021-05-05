@@ -209,6 +209,19 @@ class WorkspaceBase {
 
     addDeltaTransition(in_node, rule, out_node) {
 
+
+        if (!rule) {
+            if (this.getAutomata().name === 'DFA') {
+                createCard('You must define a rule for this transition', 'red');
+                return false;
+            }
+            rule = EMPTY_RULE;
+        }
+
+        if (!this.getAutomata().getNodeFromName(in_node).addConnectionWithRule(this.getAutomata().getNodeFromName(out_node), rule)) {
+            return false;
+        }
+
         if (!hasNodeWithName(in_node)) {
             createCard(`Node ${in_node} does not exist!`, 'red');
             return false;

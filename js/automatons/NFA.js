@@ -2,6 +2,7 @@ class NFA extends AutomatonBase {
 
     constructor() {
         super();
+        this.name = 'NFA';
     }
 
     process_string(str) {

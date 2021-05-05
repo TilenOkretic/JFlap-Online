@@ -29,7 +29,7 @@ class NodeDFA extends NodeBase {
                     }
                 }
 
-                if(!rule){
+                if (!rule) {
                     createCard('You must define a rule for transition!', 'red');
                     return;
                 }
@@ -45,6 +45,34 @@ class NodeDFA extends NodeBase {
 
         return connection;
     }
+
+    addConnectionWithRule(next_state, rule) {
+        /* TODO: Rule parsing/cheking, maybe */
+        let connection = {
+            parent: this,
+            next_state,
+            rule: EMPTY_RULE
+        };
+
+
+        if (rule) {
+            if (this.hasConnectionWithRule(rule)) {
+                createCard('This node already has a transition with this rule!', 'red');
+                return false;
+            }
+        } else {
+            createCard('You must define a rule for transition!', 'red');
+            return false;
+        }
+        connection.rule = rule;
+        this.connections.push(connection);
+        this.hasNextState(connection);
+        getAutomata().load_automata();
+
+        return connection ? true : false;
+    }
+
+
 
     hasConnectionWithRule(rule) {
         for (let i = 0; i < this.connections.length; i++) {
