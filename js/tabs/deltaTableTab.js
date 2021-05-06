@@ -21,7 +21,7 @@ class DeltaTransitionsTableTab {
 
         // table.style.width = '100%';
         table.style.borderSpacing = '0px';
-        table.style.marginTop = '20px';
+        table.style.marginTop = '10px';
         table.style.marginBottom = '20px';
 
         let states = workspace.getAutomataNodeNames();

@@ -41,6 +41,16 @@ class DeltaTransitionFunctionsTab {
             let rule = document.getElementById('trule').value;
             let out_node = document.getElementById('node_out').value;
 
+            if(!workspace.getAutomata().getNodeFromName(in_node)){
+                createCard(`Node ${in_node} does not exist!`, 'red');
+                return;
+            }
+
+            if(!workspace.getAutomata().getNodeFromName(out_node)){
+                createCard(`Node ${out_node} does not exist!`, 'red');
+                return;   
+            }
+
             if (workspace.name == 'DFA') {
                 if (getAutomataNodes().length > 0 && workspace.getAutomata().getNodeFromName(in_node).hasConnectionWithRule(rule)) {
                     createCard('Transition with this rule already exists!', 'red');
