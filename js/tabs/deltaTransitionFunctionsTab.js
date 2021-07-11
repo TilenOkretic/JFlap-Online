@@ -1,29 +1,16 @@
-class DeltaTransitionFunctionsTab {
+class DeltaTransitionFunctionsTab extends Tab{
 
     constructor() {
-        this.name = 'Delta Trnansition Functions';
+        super('Delta Trnansition Functions');
     }
 
     load(pane) {
-
-        while (pane.hasChildNodes()) {
-            pane.children.forEach(c => {
-                pane.removeChild(c);
-            });
-        }
 
         let bholder = document.querySelector('.bottom_holder');
         if (bholder) {
             bholder.style.overflow = 'scroll';
             bholder.style.overflowX = 'hidden';
         }
-
-        let h = document.createElement('h3');
-        h.style.color = 'white';
-        h.textContent = this.name + ":";
-
-        pane.appendChild(h);
-
 
         let holder = document.createElement('div');
 
@@ -62,6 +49,7 @@ class DeltaTransitionFunctionsTab {
                 document.getElementById('node_in').value = '';
                 document.getElementById('trule').value = '';
                 document.getElementById('node_out').value = '';
+                this.showTabName(pane);
                 this.load(pane);
             }
         });

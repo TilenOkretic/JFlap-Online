@@ -102,6 +102,38 @@ class AutomatonBase {
         return out;
     }
 
+    getFinalStates() {
+
+        let states = [];
+
+        for (let i = 0; i < getAutomataNodes().length; i++) {
+            if (getAutomataNodes()[i].finish) {
+                states.push(getAutomataNodes()[i]);
+            }
+        }
+
+        return states;
+
+    }
+
+    getStartState() {
+        return this.start;
+    }
+
+    getNonFinalStates() {
+
+        let states = [];
+
+        for (let i = 0; i < getAutomataNodes().length; i++) {
+            if (!getAutomataNodes()[i].finish) {
+                states.push(getAutomataNodes()[i]);
+            }
+        }
+
+        return states;
+
+    }
+
     drawConnectionLine(rule, node, other) {
         let node_vec = node.pos;
         let other_vec = other.pos;
@@ -292,9 +324,9 @@ class AutomatonBase {
                 }
 
                 for (let j = 0; j < getAutomataNodes().length; j++) {
-                    for(let k = 0; k < getAutomataNodes()[j].connections.length; k++){
+                    for (let k = 0; k < getAutomataNodes()[j].connections.length; k++) {
                         let conn = getAutomataNodes()[j].connections[k];
-                        if(conn.next_state.name === node.name){
+                        if (conn.next_state.name === node.name) {
                             getAutomataNodes()[j].connections.splice(k, 1);
                         }
                     }
@@ -319,10 +351,157 @@ class AutomatonBase {
     //     return false;
     // }
 
+    getAutomataRules() {
+        let out = [];
+        for (let tr in this.transitions) {
+            for (let rule in this.transitions[tr].rules) {
+                if (!out.includes(rule)) {
+                    out.push(rule);
+                }
+            }
+        }
+        return out;
+    }
+
     hasRuleNextState(transition, rule, next_state) {
         if (transition.rules[rule].includes(next_state)) {
             return true;
         }
         return false;
     }
+
+    getTransitionsFromState(state, rule) {
+        return this.transitions[state.name].rules[rule];
+    }
+
+    hasTransitionIn(state) {
+
+        for (let transition in this.transitions) {
+            for (let rule in this.transitions[transition].rules) {
+                let next = this.transitions[transition].rules[rule][0];
+                if (transition != state.name && next.name == state.name) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    clearNonReachable() {
+        let nodes = getAutomataNodes();
+
+
+        for (let i = 0; i < nodes.length; i++) {
+            if (!this.hasTransitionIn(nodes[i]) && !nodes[i].start) {
+                nodes.splice(i, 1);
+            }
+        }
+
+        return nodes;
+    }
+
+
+    minimization() {
+        let clear = this.clearNonReachable().slice();
+        let rules = this.getAutomataRules();
+
+        let groups = [];
+
+        // 0 - eq
+        let fs = [];
+        let nfs = [];
+        for (let i = 0; i < clear.length; i++) {
+            if (clear[i].finish) {
+                fs.push(clear[i]);
+            } else {
+                nfs.push(clear[i]);
+            }
+        }
+
+        groups.push(nfs, fs);
+
+        // 1 - eq
+        let farr = groups[0].slice();
+
+        for (let i = 0; i < farr.length - 1; i++) {
+            for (let j = 1; j < farr.length; j++) {
+                let sa = farr[i];
+                let sb = farr[j];
+                let r = true;
+                let tr_1;
+                let tr_2;
+                for (let rule of rules) {
+                    tr_1 = this.getTransitionsFromState(sa, rule)[0];
+                    tr_2 = this.getTransitionsFromState(sb, rule)[0];
+                    if (tr_1.name != tr_2.name) {
+                        if (tr_1.finish || tr_2.finish) {
+                            r = false;
+                        }
+                    }
+                }
+
+                if (!r) {
+                    if (tr_1 && tr_1.finish) {
+                        if (groups[0].includes(sa)) {
+                            groups[0].remove(sa);
+                            groups.push([sa]);
+                        }
+                    } else if (tr_2 && tr_2.finish) {
+                        if (groups[0].includes(sb)) {
+                            groups[0].splice(groups[0].indexOf(sb));
+                            groups.push([sb]);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2 - eq
+
+        farr = [...groups[0]];
+        let tmp = [];
+
+        for (let i = 0; i < farr.length - 1; i++) {
+            for (let j = 1; j < farr.length; j++) {
+                let sa = farr[i];
+                let sb = farr[j];
+                let r = true;
+                let tr_1;
+                let tr_2;
+                for (let rule of rules) {
+                    tr_1 = this.getTransitionsFromState(sa, rule)[0];
+                    tr_2 = this.getTransitionsFromState(sb, rule)[0];
+                    if (tr_1.name != tr_2.name) {
+                        for(let k = 1; k < groups.length;k++){
+                            if(groups[k].includes(tr_1)){
+                                r = false;
+                            } else if(groups[k].includes(tr_2)){
+                                r = false;
+                            }
+                        }
+                    }
+                }
+
+                if(!r) {
+                    if(tr_1 && !farr.includes(tr_1)){
+                        if(groups[0].includes(sa)){
+                            groups[0].splice(groups[0].indexOf(sa));
+                            tmp.push([sa]);
+                        }
+                    }
+                    else if(tr_2 && !farr.includes(tr_2)){
+                        if(groups[0].includes(sb)){
+                            groups[0].splice(groups[0].indexOf(sb));
+                            tmp.push([sb]);
+                        }
+                    }
+                }
+            }
+        }
+
+        console.log(tmp);
+
+        return groups;
+    }
+
 }

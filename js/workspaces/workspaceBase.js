@@ -181,18 +181,6 @@ class WorkspaceBase {
         return out;
     }
 
-    getAutomataRules() {
-        let out = [];
-        for (let tr in this.getAutomata().transitions) {
-            for (let rule in this.getAutomata().transitions[tr].rules) {
-                if (!out.includes(rule)) {
-                    out.push(rule);
-                }
-            }
-        }
-        return out;
-    }
-
     getDeltaTransitions() {
         let out_arr = [];
         const DELTA = '𝛿';

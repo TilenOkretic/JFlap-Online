@@ -1,7 +1,7 @@
-class DeltaTransitionsTableTab {
+class DeltaTransitionsTableTab extends Tab{
 
     constructor() {
-        this.name = 'Delta Trnansitions Table';
+        super('Delta Trnansitions Table');
     }
 
     load(pane) {
@@ -11,12 +11,6 @@ class DeltaTransitionsTableTab {
             holder.style.overflow = 'scroll';
         }
 
-        let h = document.createElement('h3');
-        h.style.color = 'white';
-        h.textContent = this.name + ":";
-
-        pane.appendChild(h);
-
         let table = document.createElement('table');
 
         // table.style.width = '100%';
@@ -25,7 +19,7 @@ class DeltaTransitionsTableTab {
         table.style.marginBottom = '20px';
 
         let states = workspace.getAutomataNodeNames();
-        let rules  = workspace.getAutomataRules();
+        let rules  = workspace.getAutomata().getAutomataRules();
 
         // let states = ["q0", "q1", "q2"];
         // let rules = ["a", "b", "c", "e"];
@@ -36,7 +30,7 @@ class DeltaTransitionsTableTab {
                 if (i == 0) {
                     if (j == 0) {
                         var td = tr.insertCell();
-                        td.appendChild(document.createTextNode("    * "));
+                        td.appendChild(document.createTextNode("*"));
                         td.style.width = '30px';
                         td.style.height = '30px';
                         td.style.border = '2px solid white';

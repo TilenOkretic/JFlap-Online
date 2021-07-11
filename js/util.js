@@ -93,6 +93,7 @@ let createHolder = () => {
     tabs.push(new RunInputsTab());
     tabs.push(new DeltaTransitionFunctionsTab());
     tabs.push(new DeltaTransitionsTableTab());
+    tabs.push(new ConversionTab());
 
     tabs.forEach(t => {
         let btn = document.createElement('button');
@@ -105,6 +106,7 @@ let createHolder = () => {
             while (pane.hasChildNodes()) {
                 pane.children.forEach(c => pane.removeChild(c));
             }
+            t.showTabName(pane);
             t.load(pane);
         });
         bh.appendChild(btn);
@@ -244,7 +246,6 @@ function hasNodeWithName(node_name) {
     return false;
 }
 
-
 function addNode(node) {
     getAutomataNodes().push(node);
     setNode(node);
@@ -349,3 +350,24 @@ function setInput(input) {
 }
 
 /*###########################################################*/
+
+function arrayCompare(_arr1, _arr2) {
+    if (
+        !Array.isArray(_arr1) ||
+        !Array.isArray(_arr2) ||
+        _arr1.length !== _arr2.length
+    ) {
+        return false;
+    }
+
+    const arr1 = _arr1.concat().sort();
+    const arr2 = _arr2.concat().sort();
+
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}

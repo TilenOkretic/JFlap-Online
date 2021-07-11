@@ -1,19 +1,11 @@
-class RunInputsTab {
+class RunInputsTab extends Tab{
 
 
     constructor() {
-        this.name = 'Run Inputs';
+        super('Run Inputs');
     }
 
     load(pane) {
-
-
-        let h = document.createElement('h3');
-        h.style.color = 'white';
-        h.textContent = this.name+":";
-        
-        pane.appendChild(h);
-
 
         let table = document.createElement('div');
         table.className = 'input_table';
